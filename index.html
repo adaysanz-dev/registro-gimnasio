@@ -39,15 +39,9 @@
     overscroll-behavior-y:contain;
   }
   
-  /* Ocultar flechas en inputs numéricos */
   input[type=number]::-webkit-inner-spin-button, 
-  input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none; 
-    margin: 0; 
-  }
-  input[type=number] {
-    -moz-appearance: textfield;
-  }
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
 
   #app{
     max-width:520px;
@@ -55,436 +49,286 @@
     min-height:100vh;
     display:flex;
     flex-direction:column;
-    padding-bottom:24px;
+    padding-bottom:80px; /* Espacio extra para el timer flotante */
     padding-top:env(safe-area-inset-top);
   }
   header{
     padding:22px 18px 14px;
     display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
+    flex-direction: column;
+    gap:12px;
   }
-  .header-title {
-    display:flex;
-    align-items:center;
-    gap:10px;
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
+  .header-title { display:flex; align-items:center; gap:10px; }
   header svg{ flex-shrink:0; }
   header h1{
     font-family:'Oswald',sans-serif;
-    font-weight:700;
-    font-size:22px;
-    letter-spacing:0.04em;
-    text-transform:uppercase;
-    margin:0;
+    font-weight:700; font-size:22px; letter-spacing:0.04em;
+    text-transform:uppercase; margin:0;
   }
-  header .sub{
-    font-size:12px;
-    color:var(--text-muted);
-    margin-top:2px;
-    letter-spacing:0.02em;
+  .btn-action {
+    background: var(--surface-2); color: var(--accent);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 12px; font-family: 'Oswald', sans-serif;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.05em;
+    text-transform: uppercase; cursor: pointer; transition: background .15s;
   }
-  .btn-restart {
-    background: var(--surface-2);
-    color: var(--accent);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-family: 'Oswald', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background .15s;
+  .btn-action:hover { background: var(--border); }
+  .btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  
+  /* Tracker de la semana */
+  .week-tracker { display: flex; justify-content: space-between; gap: 4px; }
+  .day-dot {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
   }
-  .btn-restart:hover { background: var(--border); }
+  .day-label { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+  .day-circle {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--surface-2); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: transparent; transition: all .2s;
+  }
+  .day-dot.active .day-label { color: var(--text); }
+  .day-dot.completed .day-circle {
+    background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: bold;
+  }
+
+  /* Planificación del día */
+  .today-plan {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--surface); padding: 10px 14px; border-radius: var(--radius);
+    border: 1px dashed var(--border);
+  }
+  .today-plan-text { font-size: 13px; color: var(--text); }
+  .today-plan-text strong { color: var(--accent); }
+
   .tabs{
-    display:flex;
-    gap:6px;
-    overflow-x:auto;
-    padding:4px 18px 12px;
-    scrollbar-width:none;
+    display:flex; gap:6px; overflow-x:auto;
+    padding:4px 18px 12px; scrollbar-width:none;
   }
   .tabs::-webkit-scrollbar{display:none;}
   .tab{
-    flex-shrink:0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family:'Oswald',sans-serif;
-    font-weight:600;
-    font-size:13px;
-    letter-spacing:0.05em;
-    text-transform:uppercase;
-    color:var(--text-muted);
-    background:var(--surface);
-    border:1px solid var(--border);
-    padding:9px 16px;
-    border-radius:999px;
-    cursor:pointer;
-    position:relative;
-    transition:color .15s, border-color .15s, background .15s;
-    white-space:nowrap;
+    flex-shrink:0; display: flex; align-items: center; gap: 8px;
+    font-family:'Oswald',sans-serif; font-weight:600; font-size:13px;
+    letter-spacing:0.05em; text-transform:uppercase; color:var(--text-muted);
+    background:var(--surface); border:1px solid var(--border);
+    padding:9px 16px; border-radius:999px; cursor:pointer;
   }
-  .tab.active{
-    color:var(--bg);
-    background:var(--accent);
-    border-color:var(--accent);
-  }
-  .tab.add-tab{
-    color:var(--accent);
-    background:transparent;
-    border:1px dashed var(--border);
-    font-size:16px;
-    padding:9px 14px;
-    justify-content: center;
-  }
-  .tab-del {
-    color: var(--bg);
-    font-size: 14px;
-    font-weight: bold;
-    opacity: 0.7;
-    transition: opacity .15s;
-  }
-  .tab-del:hover { opacity: 1; }
-  main{
-    flex:1;
-    padding:6px 18px 0;
-  }
-  .empty{
-    text-align:center;
-    color:var(--text-muted);
-    font-size:14px;
-    padding:60px 20px;
-    line-height:1.6;
-  }
-  .row{
-    display:flex;
-    align-items:center;
-    gap:6px; 
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    padding:10px 8px;
-    margin-bottom:8px;
-  }
-  .row.checked{
-    border-color:var(--good);
-    background:linear-gradient(0deg, rgba(87,199,133,.08), rgba(87,199,133,.08)), var(--surface);
-  }
-  .check{
-    width:24px;
-    height:24px;
-    border-radius:50%;
-    border:2px solid var(--text-muted);
-    flex-shrink:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    color:transparent;
-    font-size:14px;
-    transition:all .15s;
-  }
-  .row.checked .check{
-    border-color:var(--good);
-    background:var(--good);
-    color:var(--bg);
-  }
-  .ex-name{
-    flex:1;
-    font-size:14px;
-    font-weight:500;
-    background:transparent;
-    border:none;
-    color:var(--text);
-    font-family:'Inter',sans-serif;
-    outline:none;
-    min-width:50px; 
-    padding:4px 2px;
-  }
-  .row.checked .ex-name{
-    color:var(--text-muted);
-    text-decoration:line-through;
-    text-decoration-color:var(--good);
-  }
+  .tab.active{ color:var(--bg); background:var(--accent); border-color:var(--accent); }
+  .tab.add-tab{ color:var(--accent); background:transparent; border:1px dashed var(--border); font-size:16px; justify-content: center; }
+  .tab-del { color: var(--bg); font-size: 14px; font-weight: bold; opacity: 0.7; }
+
+  main{ flex:1; padding:6px 18px 0; }
+  .empty{ text-align:center; color:var(--text-muted); font-size:14px; padding:60px 20px; line-height:1.6; }
   
-  /* Nuevo estilo para Sets x Reps */
+  .row{
+    display:flex; flex-wrap: wrap; gap:6px; align-items: center;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); padding:10px 8px; margin-bottom:8px;
+  }
+  .row.checked{ border-color:var(--good); background:linear-gradient(0deg, rgba(87,199,133,.08), rgba(87,199,133,.08)), var(--surface); }
+  
+  .row-top { display: flex; width: 100%; align-items: center; gap: 6px; }
+  .row-bottom { display: flex; width: 100%; padding-left: 30px; } /* Indentado al nivel del texto */
+
+  .check{
+    width:24px; height:24px; border-radius:50%; border:2px solid var(--text-muted);
+    flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    color:transparent; font-size:14px; cursor:pointer;
+  }
+  .row.checked .check{ border-color:var(--good); background:var(--good); color:var(--bg); }
+  
+  .ex-name{
+    flex:1; font-size:14px; font-weight:500; background:transparent; border:none;
+    color:var(--text); font-family:'Inter',sans-serif; outline:none; min-width:50px;
+  }
+  .row.checked .ex-name{ color:var(--text-muted); text-decoration:line-through; text-decoration-color:var(--good); }
+  
   .sets-reps-wrap {
-    display:flex;
-    align-items:center;
-    gap:2px;
-    background:var(--surface-2);
-    border-radius:6px;
-    padding:5px 4px;
-    flex-shrink:0;
-    color: var(--text-muted);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
+    display:flex; align-items:center; gap:2px; background:var(--surface-2);
+    border-radius:6px; padding:5px 4px; flex-shrink:0; color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
   }
   .sets-reps-input {
-    width:24px;
-    background:transparent;
-    border:none;
-    color:var(--text);
-    font-family:'IBM Plex Mono',monospace;
-    font-size:13px;
-    font-weight:600;
-    text-align:center;
-    outline:none;
-    padding: 0;
+    width:24px; background:transparent; border:none; color:var(--text);
+    font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;
+    text-align:center; outline:none; padding: 0;
   }
-  .sets-reps-input::placeholder { color: var(--text-muted); font-weight: 400; font-size: 12px; }
-
+  
   .weight-wrap{
-    display:flex;
-    align-items:baseline;
-    gap:2px;
-    background:var(--surface-2);
-    border-radius:6px;
-    padding:5px 6px;
-    flex-shrink:0;
+    display:flex; align-items:baseline; gap:2px; background:var(--surface-2);
+    border-radius:6px; padding:5px 6px; flex-shrink:0;
   }
   .weight-input{
-    width:50px; 
-    background:transparent;
-    border:none;
-    color:var(--text);
-    font-family:'IBM Plex Mono',monospace;
-    font-size:13px;
-    font-weight:600;
-    text-align:right;
-    outline:none;
+    width:50px; background:transparent; border:none; color:var(--text);
+    font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; text-align:right; outline:none;
   }
-  .weight-unit{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11px;
-    color:var(--text-muted);
-  }
-  .up-weight-check{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    cursor: pointer;
-    flex-shrink: 0;
-    padding: 0 2px;
-  }
+  .weight-unit{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-muted); }
+  
+  .up-weight-check{ display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; flex-shrink: 0; }
   .up-weight-box {
-    width: 18px;
-    height: 18px;
-    border: 1.5px solid var(--text-muted);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
-    color: transparent;
-    transition: all .15s;
+    width: 18px; height: 18px; border: 1.5px solid var(--text-muted); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: transparent;
   }
-  .up-weight-check.active .up-weight-box {
-    border-color: var(--accent);
-    background: var(--accent);
-    color: var(--bg);
+  .up-weight-check.active .up-weight-box { border-color: var(--accent); background: var(--accent); color: var(--bg); }
+  .up-weight-label { font-size: 8px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; }
+  .up-weight-check.active .up-weight-label { color: var(--accent); font-weight: 600; }
+  
+  .order-btns { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+  .order-btn { background: transparent; border: none; color: var(--text-muted); font-size: 10px; cursor: pointer; padding: 0 2px; }
+  .del{ background:transparent; border:none; color:var(--text-muted); font-size:15px; cursor:pointer; flex-shrink:0; }
+  
+  /* Notas */
+  .notes-input {
+    width: 100%; background: transparent; border: none; border-bottom: 1px dashed var(--border);
+    color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 12px;
+    padding: 4px 0; outline: none; transition: color .2s, border-color .2s;
   }
-  .up-weight-label {
-    font-size: 8px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    letter-spacing: 0.05em;
-  }
-  .up-weight-check.active .up-weight-label {
-    color: var(--accent);
-    font-weight: 600;
-  }
-  .order-btns {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex-shrink: 0;
-  }
-  .order-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    font-size: 10px;
-    cursor: pointer;
-    padding: 0 2px;
-    line-height: 1;
-  }
-  .order-btn:hover { color: var(--accent); }
-  .del{
-    background:transparent;
-    border:none;
-    color:var(--text-muted);
-    font-size:15px;
-    cursor:pointer;
-    padding:4px 2px;
-    flex-shrink:0;
-    line-height:1;
-  }
-  .del:hover{ color:var(--accent); }
+  .notes-input:focus { color: var(--text); border-color: var(--accent); }
+
   .add-ex-btn{
-    width:100%;
-    background:transparent;
-    border:1px dashed var(--border);
-    color:var(--accent);
-    border-radius:var(--radius);
-    padding:12px;
-    font-family:'Oswald',sans-serif;
-    font-weight:600;
-    letter-spacing:0.04em;
-    text-transform:uppercase;
-    font-size:13px;
-    cursor:pointer;
-    margin-top:4px;
-    margin-bottom:8px;
+    width:100%; background:transparent; border:1px dashed var(--border); color:var(--accent);
+    border-radius:var(--radius); padding:12px; font-family:'Oswald',sans-serif;
+    font-weight:600; letter-spacing:0.04em; text-transform:uppercase; font-size:13px;
+    cursor:pointer; margin-top:4px; margin-bottom:8px;
   }
-  .inline-form{
-    display:flex;
-    gap:6px;
-    background:var(--surface);
-    border:1px solid var(--accent);
-    border-radius:var(--radius);
-    padding:10px;
-    margin-bottom:8px;
-    flex-wrap: wrap; 
-  }
-  .inline-form input[type=text]{
-    flex:1;
-    background:var(--surface-2);
-    border:1px solid var(--border);
-    border-radius:6px;
-    padding:8px;
-    color:var(--text);
-    font-family:'Inter',sans-serif;
-    font-size:13px;
-    outline:none;
-    min-width:100px;
-  }
-  .inline-form-group {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0 6px;
-    color: var(--text-muted);
-    font-family: 'IBM Plex Mono', monospace;
-  }
-  .inline-form-group input[type=number]{
-    width:32px;
-    background:transparent;
-    border:none;
-    color:var(--text);
-    font-family:'IBM Plex Mono',monospace;
-    font-size:13px;
-    text-align:center;
-    outline:none;
-    padding: 8px 0;
-  }
-  .inline-form > input[type=number]{
-    width:65px; 
-    background:var(--surface-2);
-    border:1px solid var(--border);
-    border-radius:6px;
-    padding:8px 6px;
-    color:var(--text);
-    font-family:'IBM Plex Mono',monospace;
-    font-size:13px;
-    text-align:center;
-    outline:none;
-  }
-  .inline-form button{
-    border:none;
-    border-radius:6px;
-    padding:0 12px;
-    font-family:'Oswald',sans-serif;
-    font-weight:600;
-    font-size:13px;
-    cursor:pointer;
-  }
-  .btn-ok{ background:var(--accent); color:var(--bg); flex-grow: 1; padding: 8px 0 !important; }
-  .btn-cancel{ background:var(--surface-2); color:var(--text-muted); }
+
+  .io-section { display: flex; justify-content: center; gap: 12px; padding: 10px 20px; margin-top: 20px; }
+  .footer-note{ text-align:center; color:var(--text-muted); font-size:11px; padding:0 20px 20px; }
   
-  .io-section {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    padding: 10px 20px;
-    margin-top: 20px;
+  /* Modal Planificador */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 100;
   }
-  .btn-io {
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-    border-radius: 6px;
-    padding: 8px 16px;
-    font-family: 'Oswald', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    cursor: pointer;
+  .modal-overlay.active { display: flex; }
+  .modal-content {
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto;
   }
-  .btn-io:hover { border-color: var(--text-muted); color: var(--text); }
-  
-  .footer-note{
-    text-align:center;
-    color:var(--text-muted);
-    font-size:11px;
-    letter-spacing:0.03em;
-    padding:0 20px 20px;
+  .modal-title { font-family: 'Oswald', sans-serif; text-transform: uppercase; margin: 0 0 16px 0; color: var(--accent); }
+  .modal-day-select {
+    width: 100%; padding: 10px; background: var(--surface); color: var(--text);
+    border: 1px solid var(--border); border-radius: 6px; margin-bottom: 16px; outline: none;
   }
+  .modal-cat-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .modal-cat-item { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+  /* Temporizador Flotante */
+  .fab-timer {
+    position: fixed; bottom: 20px; right: 20px; background: var(--surface);
+    border: 2px solid var(--accent); border-radius: 50px; padding: 8px 16px;
+    display: flex; align-items: center; gap: 10px; z-index: 50; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    transition: all 0.3s;
+  }
+  .fab-timer.active { background: var(--accent); color: var(--bg); }
+  .fab-display { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 16px; cursor: pointer; }
+  .fab-menu {
+    position: absolute; bottom: 100%; right: 0; margin-bottom: 10px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px; display: none; flex-direction: column; gap: 6px;
+  }
+  .fab-timer:hover .fab-menu, .fab-menu.show { display: flex; }
+  .fab-btn {
+    background: var(--surface-2); border: none; color: var(--text); padding: 8px 16px;
+    border-radius: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; cursor: pointer;
+  }
+  .fab-btn:hover { background: var(--accent); color: var(--bg); }
+
+  /* Animación destello timer */
+  @keyframes flash { 0%, 100% { background: var(--surface); } 50% { background: var(--accent); color: var(--bg); } }
+  .timer-done { animation: flash 1s infinite; }
 </style>
 </head>
 <body>
 <div id="app">
   <header>
-    <div class="header-title">
-      <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
-        <rect x="2" y="12" width="4" height="6" rx="1" fill="#ff6a39"/>
-        <rect x="24" y="12" width="4" height="6" rx="1" fill="#ff6a39"/>
-        <rect x="7" y="9" width="3" height="12" rx="1" fill="#ece9e4"/>
-        <rect x="20" y="9" width="3" height="12" rx="1" fill="#ece9e4"/>
-        <rect x="9" y="14" width="12" height="2" fill="#ece9e4"/>
-      </svg>
-      <div>
-        <h1>Registro</h1>
-        <div class="sub">Tu progreso, por grupo muscular</div>
+    <div class="header-top">
+      <div class="header-title">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+          <rect x="2" y="12" width="4" height="6" rx="1" fill="#ff6a39"/>
+          <rect x="24" y="12" width="4" height="6" rx="1" fill="#ff6a39"/>
+          <rect x="7" y="9" width="3" height="12" rx="1" fill="#ece9e4"/>
+          <rect x="20" y="9" width="3" height="12" rx="1" fill="#ece9e4"/>
+          <rect x="9" y="14" width="12" height="2" fill="#ece9e4"/>
+        </svg>
+        <div>
+          <h1>Registro</h1>
+        </div>
       </div>
+      <button id="btn-save-session" class="btn-action btn-primary">Guardar Sesión</button>
     </div>
-    <button id="btn-restart" class="btn-restart">Reiniciar</button>
+    
+    <div class="week-tracker" id="week-tracker">
+      </div>
+
+    <div class="today-plan">
+      <div class="today-plan-text" id="today-text">Cargando...</div>
+      <button class="btn-action" onclick="openPlanner()">Planificar</button>
+    </div>
   </header>
+
   <nav class="tabs" id="tabs"></nav>
   <main id="main"></main>
   
   <div class="io-section">
-    <button class="btn-io" id="btn-export">Exportar Datos</button>
-    <button class="btn-io" id="btn-import" onclick="document.getElementById('file-import').click()">Importar Datos</button>
+    <button class="btn-action" id="btn-export">Exportar</button>
+    <button class="btn-action" id="btn-import" onclick="document.getElementById('file-import').click()">Importar</button>
     <input type="file" id="file-import" accept=".json" style="display: none;">
   </div>
-  
-  <div class="footer-note">Los datos se guardan solo en este dispositivo.</div>
+  <div class="footer-note">Los datos se guardan en el dispositivo.</div>
+</div>
+
+<div class="modal-overlay" id="planner-modal">
+  <div class="modal-content">
+    <h2 class="modal-title">Plan Semanal</h2>
+    <select class="modal-day-select" id="planner-day">
+      <option value="1">Lunes</option><option value="2">Martes</option>
+      <option value="3">Miércoles</option><option value="4">Jueves</option>
+      <option value="5">Viernes</option><option value="6">Sábado</option><option value="0">Domingo</option>
+    </select>
+    <div class="modal-cat-list" id="planner-cats"></div>
+    <div class="modal-actions">
+      <button class="btn-action" onclick="closePlanner()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="fab-timer" id="fab-timer">
+  <div class="fab-menu" id="fab-menu">
+    <button class="fab-btn" onclick="startTimer(60)">60s</button>
+    <button class="fab-btn" onclick="startTimer(90)">90s</button>
+    <button class="fab-btn" onclick="startTimer(120)">120s</button>
+    <button class="fab-btn" onclick="stopTimer()">Detener</button>
+  </div>
+  <div class="fab-display" id="timer-display" onclick="toggleTimerMenu()">⏱️ 00:00</div>
 </div>
 
 <script>
 const STORAGE_KEY = 'gymlog-data';
-const DEFAULT_CATEGORIES = ['Pierna','Espalda','Pecho','Hombro','Brazo','Core'];
+// Cambiado Core por Cardio
+const DEFAULT_CATEGORIES = ['Pierna','Espalda','Pecho','Hombro','Brazo','Cardio'];
+const DAY_NAMES = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 
 let state = null;
 let activeCategory = null;
 let addingCategory = false;
-let addingExerciseFor = null;
+
+// Variables Timer
+let timerInterval;
+let timeRemaining = 0;
 
 function uid(){ return Math.random().toString(36).slice(2,9); }
 
 function defaultState(){
   return {
-    categories: DEFAULT_CATEGORIES.map(name => ({ id: uid(), name, exercises: [] }))
+    categories: DEFAULT_CATEGORIES.map(name => ({ id: uid(), name, exercises: [] })),
+    history: {}, // { 'YYYY-MM-DD': true }
+    routine: { 0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[] } // ID de categorías por día
   };
 }
 
@@ -492,28 +336,79 @@ function loadState(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
     state = raw ? JSON.parse(raw) : defaultState();
-  }catch(e){
-    state = defaultState();
-  }
+    
+    // Migraciones si el JSON es antiguo
+    if(!state.history) state.history = {};
+    if(!state.routine) state.routine = { 0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[] };
+    
+  }catch(e){ state = defaultState(); }
   activeCategory = state.categories[0] ? state.categories[0].id : null;
   render();
 }
 
 function saveState(){
-  try{
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }catch(e){
-    console.error('No se pudo guardar', e);
-  }
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  catch(e){ console.error('No se pudo guardar', e); }
 }
 
-function getCategory(id){
-  return state.categories.find(c => c.id === id);
-}
+function getCategory(id){ return state.categories.find(c => c.id === id); }
 
 function render(){
+  renderHeader();
   renderTabs();
   renderMain();
+}
+
+function getLocalDateStr(date) {
+  const d = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return d.toISOString().split('T')[0];
+}
+
+function renderHeader(){
+  const today = new Date();
+  const currentDayNum = today.getDay();
+  const localTodayStr = getLocalDateStr(today);
+  
+  // Tracker Semanal (L a D)
+  const tracker = document.getElementById('week-tracker');
+  tracker.innerHTML = '';
+  // Ajuste para que empiece en Lunes (1) y acabe en Domingo (0)
+  const weekDays = [1, 2, 3, 4, 5, 6, 0];
+  const shortNames = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+  
+  // Calcular la fecha del lunes de esta semana
+  let diff = today.getDate() - currentDayNum + (currentDayNum === 0 ? -6 : 1);
+  let monday = new Date(today.setDate(diff));
+
+  weekDays.forEach((dNum, index) => {
+    const loopDate = new Date(monday);
+    loopDate.setDate(monday.getDate() + index);
+    const dateStr = getLocalDateStr(loopDate);
+    
+    const isToday = dNum === new Date().getDay(); // Vuelve a evaluar por si cambió de día
+    const isCompleted = !!state.history[dateStr];
+
+    const dot = document.createElement('div');
+    dot.className = `day-dot ${isToday ? 'active' : ''} ${isCompleted ? 'completed' : ''}`;
+    dot.innerHTML = `
+      <span class="day-label">${shortNames[index]}</span>
+      <div class="day-circle">${isCompleted ? '✓' : ''}</div>
+    `;
+    tracker.appendChild(dot);
+  });
+
+  // Hoy Toca
+  const todayPlanText = document.getElementById('today-text');
+  const todayCatIds = state.routine[new Date().getDay()] || [];
+  if(todayCatIds.length === 0){
+    todayPlanText.innerHTML = "Hoy: <strong>Descanso (o sin asignar)</strong>";
+  } else {
+    const names = todayCatIds.map(id => {
+      const c = getCategory(id);
+      return c ? c.name : '';
+    }).filter(n => n);
+    todayPlanText.innerHTML = `Hoy toca: <strong>${names.join(', ')}</strong>`;
+  }
 }
 
 function renderTabs(){
@@ -533,29 +428,24 @@ function renderTabs(){
       delCatBtn.textContent = '✕';
       delCatBtn.onclick = (e) => {
         e.stopPropagation();
-        if(confirm(`¿Estás seguro de eliminar el grupo "${cat.name}" y todos sus ejercicios?`)){
+        if(confirm(`¿Eliminar grupo "${cat.name}"?`)){
           state.categories = state.categories.filter(c => c.id !== cat.id);
+          // Limpiar referencias en rutina
+          for(let d in state.routine) state.routine[d] = state.routine[d].filter(id => id !== cat.id);
           activeCategory = state.categories[0] ? state.categories[0].id : null;
-          saveState();
-          render();
+          saveState(); render();
         }
       };
       btn.appendChild(delCatBtn);
     }
-
-    btn.onclick = () => { activeCategory = cat.id; addingExerciseFor = null; render(); };
+    btn.onclick = () => { activeCategory = cat.id; render(); };
     tabs.appendChild(btn);
   });
 
   if(addingCategory){
     const form = document.createElement('form');
-    form.style.display = 'flex';
-    form.style.gap = '6px';
-    form.style.flexShrink = '0';
-    form.innerHTML = `
-      <input type="text" id="new-cat-input" placeholder="Nombre" maxlength="20"
-        style="width:110px;background:var(--surface-2);border:1px solid var(--accent);border-radius:8px;padding:8px 10px;color:var(--text);font-family:Inter,sans-serif;font-size:13px;outline:none;">
-    `;
+    form.style.display = 'flex'; form.style.gap = '6px';
+    form.innerHTML = `<input type="text" id="new-cat-input" placeholder="Nombre" maxlength="20" style="width:100px;background:var(--surface-2);border:1px solid var(--accent);border-radius:8px;padding:8px;color:var(--text);font-size:13px;outline:none;">`;
     tabs.appendChild(form);
     const input = form.querySelector('#new-cat-input');
     setTimeout(() => input.focus(), 0);
@@ -566,8 +456,7 @@ function renderTabs(){
     input.addEventListener('blur', () => confirmAddCategory(input.value));
   } else {
     const addBtn = document.createElement('div');
-    addBtn.className = 'tab add-tab';
-    addBtn.textContent = '+';
+    addBtn.className = 'tab add-tab'; addBtn.textContent = '+';
     addBtn.onclick = () => { addingCategory = true; render(); };
     tabs.appendChild(addBtn);
   }
@@ -590,302 +479,241 @@ function renderMain(){
   main.innerHTML = '';
   const cat = getCategory(activeCategory);
   if(!cat){
-    main.innerHTML = '<div class="empty">Crea un grupo muscular con el botón + de arriba.</div>';
-    return;
+    main.innerHTML = '<div class="empty">Crea un grupo muscular con el botón +</div>'; return;
   }
 
-  if(cat.exercises.length === 0 && addingExerciseFor !== cat.id){
-    const empty = document.createElement('div');
-    empty.className = 'empty';
-    empty.textContent = 'Aún no has añadido ejercicios de ' + cat.name.toLowerCase() + '.';
-    main.appendChild(empty);
-  } else {
-    cat.exercises.forEach((ex, index) => {
-      main.appendChild(renderExerciseRow(cat, ex, index));
-    });
-  }
+  cat.exercises.forEach((ex, index) => main.appendChild(renderExerciseRow(cat, ex, index)));
 
-  if(addingExerciseFor === cat.id){
-    main.appendChild(renderAddExerciseForm(cat));
-  } else {
-    const addBtn = document.createElement('button');
-    addBtn.className = 'add-ex-btn';
-    addBtn.textContent = '+ Añadir ejercicio';
-    addBtn.onclick = () => { addingExerciseFor = cat.id; render(); };
-    main.appendChild(addBtn);
-  }
+  const addBtn = document.createElement('button');
+  addBtn.className = 'add-ex-btn';
+  addBtn.textContent = '+ Añadir ejercicio';
+  addBtn.onclick = () => {
+    cat.exercises.push({ id: uid(), name: '', weight: 0, sets: '', repsCount: '', checked: false, upWeight: false, notes: '' });
+    saveState(); render();
+  };
+  main.appendChild(addBtn);
 }
 
 function renderExerciseRow(cat, ex, index){
   const row = document.createElement('div');
   row.className = 'row' + (ex.checked ? ' checked' : '');
 
-  // Checkbox
+  // Fila Superior
+  const topRow = document.createElement('div');
+  topRow.className = 'row-top';
+
   const check = document.createElement('div');
-  check.className = 'check';
-  check.textContent = '✓';
-  check.onclick = () => {
-    ex.checked = !ex.checked;
-    saveState();
-    render();
-  };
-  row.appendChild(check);
+  check.className = 'check'; check.textContent = '✓';
+  check.onclick = () => { ex.checked = !ex.checked; saveState(); render(); };
+  topRow.appendChild(check);
 
-  // Nombre
   const nameInput = document.createElement('input');
-  nameInput.className = 'ex-name';
-  nameInput.type = 'text';
-  nameInput.value = ex.name;
-  nameInput.addEventListener('change', () => {
-    ex.name = nameInput.value.trim() || ex.name;
-    saveState();
-  });
-  row.appendChild(nameInput);
+  nameInput.className = 'ex-name'; nameInput.type = 'text';
+  nameInput.placeholder = 'Nombre ejercicio...'; nameInput.value = ex.name;
+  nameInput.addEventListener('change', () => { ex.name = nameInput.value.trim(); saveState(); });
+  topRow.appendChild(nameInput);
 
-  // --- Lógica de migración si venías de "3x12" a variables separadas ---
-  let initSets = ex.sets !== undefined ? ex.sets : '';
-  let initReps = ex.repsCount !== undefined ? ex.repsCount : '';
-  
-  if (typeof ex.reps === 'string') {
-    if (ex.reps.includes('x')) {
-      const parts = ex.reps.split('x');
-      initSets = parts[0].trim();
-      initReps = parts[1].trim();
-    }
-    delete ex.reps; // Borramos la antigua
-    ex.sets = initSets;
-    ex.repsCount = initReps;
-    saveState(); // Guardamos el formato nuevo
-  }
-
-  // --- Nuevos campos numéricos para Sets y Reps ---
   const setsRepsWrap = document.createElement('div');
   setsRepsWrap.className = 'sets-reps-wrap';
-  
-  const setsInput = document.createElement('input');
-  setsInput.className = 'sets-reps-input';
-  setsInput.type = 'number';
-  setsInput.min = '0';
-  setsInput.placeholder = '3';
-  setsInput.value = initSets;
-  setsInput.addEventListener('change', () => {
-    ex.sets = parseInt(setsInput.value) || '';
-    saveState();
-  });
+  const setsIn = document.createElement('input'); setsIn.className = 'sets-reps-input'; setsIn.type = 'number'; setsIn.placeholder = '3'; setsIn.value = ex.sets;
+  setsIn.addEventListener('change', () => { ex.sets = parseInt(setsIn.value) || ''; saveState(); });
+  const sep = document.createElement('span'); sep.textContent = 'x';
+  const repsIn = document.createElement('input'); repsIn.className = 'sets-reps-input'; repsIn.type = 'number'; repsIn.placeholder = '12'; repsIn.value = ex.repsCount;
+  repsIn.addEventListener('change', () => { ex.repsCount = parseInt(repsIn.value) || ''; saveState(); });
+  setsRepsWrap.append(setsIn, sep, repsIn);
+  topRow.appendChild(setsRepsWrap);
 
-  const separator = document.createElement('span');
-  separator.textContent = 'x';
-
-  const repsInput = document.createElement('input');
-  repsInput.className = 'sets-reps-input';
-  repsInput.type = 'number';
-  repsInput.min = '0';
-  repsInput.placeholder = '12';
-  repsInput.value = initReps;
-  repsInput.addEventListener('change', () => {
-    ex.repsCount = parseInt(repsInput.value) || '';
-    saveState();
-  });
-
-  setsRepsWrap.appendChild(setsInput);
-  setsRepsWrap.appendChild(separator);
-  setsRepsWrap.appendChild(repsInput);
-  row.appendChild(setsRepsWrap);
-
-  // Peso
   const weightWrap = document.createElement('div');
   weightWrap.className = 'weight-wrap';
-  const weightInput = document.createElement('input');
-  weightInput.className = 'weight-input';
-  weightInput.type = 'number';
-  weightInput.step = '0.5';
-  weightInput.min = '0';
-  weightInput.value = ex.weight;
-  weightInput.addEventListener('change', () => {
-    const v = parseFloat(weightInput.value);
-    ex.weight = isNaN(v) ? 0 : v;
-    saveState();
-  });
-  weightWrap.appendChild(weightInput);
-  const unit = document.createElement('span');
-  unit.className = 'weight-unit';
-  unit.textContent = 'kg';
-  weightWrap.appendChild(unit);
-  row.appendChild(weightWrap);
+  const weightIn = document.createElement('input'); weightIn.className = 'weight-input'; weightIn.type = 'number'; weightIn.step = '0.5'; weightIn.value = ex.weight;
+  weightIn.addEventListener('change', () => { ex.weight = parseFloat(weightIn.value) || 0; saveState(); });
+  const unit = document.createElement('span'); unit.className = 'weight-unit'; unit.textContent = 'kg';
+  weightWrap.append(weightIn, unit);
+  topRow.appendChild(weightWrap);
 
-  // Check de "Subir peso"
-  const upWeightCheck = document.createElement('div');
-  upWeightCheck.className = 'up-weight-check' + (ex.upWeight ? ' active' : '');
-  const upWeightBox = document.createElement('div');
-  upWeightBox.className = 'up-weight-box';
-  upWeightBox.textContent = '↑';
-  const upWeightLabel = document.createElement('span');
-  upWeightLabel.className = 'up-weight-label';
-  upWeightLabel.textContent = 'Subir';
-  upWeightCheck.appendChild(upWeightBox);
-  upWeightCheck.appendChild(upWeightLabel);
-  upWeightCheck.onclick = () => {
-    ex.upWeight = !ex.upWeight;
-    saveState();
-    render();
-  };
-  row.appendChild(upWeightCheck);
+  const upWeight = document.createElement('div');
+  upWeight.className = 'up-weight-check' + (ex.upWeight ? ' active' : '');
+  upWeight.innerHTML = `<div class="up-weight-box">↑</div><span class="up-weight-label">Subir</span>`;
+  upWeight.onclick = () => { ex.upWeight = !ex.upWeight; saveState(); render(); };
+  topRow.appendChild(upWeight);
 
-  // Botones de orden (Subir/Bajar)
   const orderBtns = document.createElement('div');
   orderBtns.className = 'order-btns';
-  
-  const btnUp = document.createElement('button');
-  btnUp.className = 'order-btn';
-  btnUp.innerHTML = '▲';
-  btnUp.style.visibility = index === 0 ? 'hidden' : 'visible';
-  btnUp.onclick = () => {
-    if(index > 0){
-      const temp = cat.exercises[index - 1];
-      cat.exercises[index - 1] = cat.exercises[index];
-      cat.exercises[index] = temp;
-      saveState(); render();
-    }
-  };
-  
-  const btnDown = document.createElement('button');
-  btnDown.className = 'order-btn';
-  btnDown.innerHTML = '▼';
-  btnDown.style.visibility = index === cat.exercises.length - 1 ? 'hidden' : 'visible';
-  btnDown.onclick = () => {
-    if(index < cat.exercises.length - 1){
-      const temp = cat.exercises[index + 1];
-      cat.exercises[index + 1] = cat.exercises[index];
-      cat.exercises[index] = temp;
-      saveState(); render();
-    }
-  };
-  
-  orderBtns.appendChild(btnUp);
-  orderBtns.appendChild(btnDown);
-  row.appendChild(orderBtns);
+  const btnUp = document.createElement('button'); btnUp.className = 'order-btn'; btnUp.innerHTML = '▲'; btnUp.style.visibility = index === 0 ? 'hidden' : 'visible';
+  btnUp.onclick = () => { const t = cat.exercises[index-1]; cat.exercises[index-1] = cat.exercises[index]; cat.exercises[index] = t; saveState(); render(); };
+  const btnDown = document.createElement('button'); btnDown.className = 'order-btn'; btnDown.innerHTML = '▼'; btnDown.style.visibility = index === cat.exercises.length-1 ? 'hidden' : 'visible';
+  btnDown.onclick = () => { const t = cat.exercises[index+1]; cat.exercises[index+1] = cat.exercises[index]; cat.exercises[index] = t; saveState(); render(); };
+  orderBtns.append(btnUp, btnDown);
+  topRow.appendChild(orderBtns);
 
-  // Borrar
-  const del = document.createElement('button');
-  del.className = 'del';
-  del.textContent = '✕';
-  del.onclick = () => {
-    cat.exercises = cat.exercises.filter(e => e.id !== ex.id);
-    saveState();
-    render();
-  };
-  row.appendChild(del);
+  const del = document.createElement('button'); del.className = 'del'; del.textContent = '✕';
+  del.onclick = () => { cat.exercises = cat.exercises.filter(e => e.id !== ex.id); saveState(); render(); };
+  topRow.appendChild(del);
+
+  row.appendChild(topRow);
+
+  // Fila Inferior (Notas)
+  const bottomRow = document.createElement('div');
+  bottomRow.className = 'row-bottom';
+  const notes = document.createElement('input');
+  notes.className = 'notes-input'; notes.type = 'text';
+  notes.placeholder = 'Notas (posición, altura asiento, sensaciones)...';
+  notes.value = ex.notes || '';
+  notes.addEventListener('change', () => { ex.notes = notes.value; saveState(); });
+  bottomRow.appendChild(notes);
+  
+  row.appendChild(bottomRow);
 
   return row;
 }
 
-function renderAddExerciseForm(cat){
-  const form = document.createElement('div');
-  form.className = 'inline-form';
-  form.innerHTML = `
-    <input type="text" id="new-ex-name" placeholder="Ejercicio" maxlength="40">
-    <div class="inline-form-group">
-      <input type="number" id="new-ex-sets" placeholder="3" min="0">
-      <span>x</span>
-      <input type="number" id="new-ex-reps" placeholder="12" min="0">
-    </div>
-    <input type="number" id="new-ex-weight" placeholder="kg" step="0.5" min="0">
-    <div style="width: 100%; display: flex; gap: 8px; margin-top: 4px;">
-      <button class="btn-cancel" type="button" style="padding: 8px 16px;">✕</button>
-      <button class="btn-ok" type="button">Guardar</button>
-    </div>
-  `;
-  const nameInput = form.querySelector('#new-ex-name');
-  const setsInput = form.querySelector('#new-ex-sets');
-  const repsInput = form.querySelector('#new-ex-reps');
-  const weightInput = form.querySelector('#new-ex-weight');
-  const okBtn = form.querySelector('.btn-ok');
-  const cancelBtn = form.querySelector('.btn-cancel');
+// === Lógica Historial / Guardar Sesión ===
+document.getElementById('btn-save-session').addEventListener('click', () => {
+  // Verificar si hay algo marcado hoy en algún grupo
+  let hasChecked = false;
+  state.categories.forEach(cat => {
+    cat.exercises.forEach(ex => { if(ex.checked) hasChecked = true; });
+  });
 
-  function confirmAdd(){
-    const name = nameInput.value.trim();
-    if(!name){ addingExerciseFor = null; render(); return; }
+  if(!hasChecked) {
+    alert("No has marcado ningún ejercicio completado aún.");
+    return;
+  }
+
+  if (confirm('¿Terminar entrenamiento? Se guardará el día y se reiniciarán los checks.')) {
+    const todayStr = getLocalDateStr(new Date());
+    state.history[todayStr] = true;
     
-    const sets = parseInt(setsInput.value) || '';
-    const repsCount = parseInt(repsInput.value) || '';
-    const weight = parseFloat(weightInput.value) || 0;
+    // Desmarcar todo
+    state.categories.forEach(cat => {
+      cat.exercises.forEach(ex => ex.checked = false);
+    });
     
-    cat.exercises.push({ id: uid(), name, weight, sets, repsCount, checked: false, upWeight: false });
-    addingExerciseFor = null;
     saveState();
     render();
   }
+});
 
-  okBtn.onclick = confirmAdd;
-  cancelBtn.onclick = () => { addingExerciseFor = null; render(); };
-  nameInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); confirmAdd(); } });
-  setsInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); confirmAdd(); } });
-  repsInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); confirmAdd(); } });
-  weightInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); confirmAdd(); } });
+// === Lógica Planificador Modal ===
+const modal = document.getElementById('planner-modal');
+const daySelect = document.getElementById('planner-day');
+const catList = document.getElementById('planner-cats');
 
-  setTimeout(() => nameInput.focus(), 0);
-  return form;
+function openPlanner(){
+  daySelect.value = new Date().getDay().toString();
+  renderPlannerCats();
+  modal.classList.add('active');
+}
+function closePlanner(){
+  modal.classList.remove('active');
+  render(); // Actualizar cabecera
+}
+daySelect.addEventListener('change', renderPlannerCats);
+
+function renderPlannerCats(){
+  catList.innerHTML = '';
+  const day = daySelect.value;
+  const assigned = state.routine[day] || [];
+  
+  if(state.categories.length === 0){
+    catList.innerHTML = '<span style="color:var(--text-muted);font-size:13px;">Crea primero grupos musculares.</span>';
+    return;
+  }
+
+  state.categories.forEach(cat => {
+    const label = document.createElement('label');
+    label.className = 'modal-cat-item';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = assigned.includes(cat.id);
+    cb.addEventListener('change', (e) => {
+      if(e.target.checked){
+        if(!state.routine[day].includes(cat.id)) state.routine[day].push(cat.id);
+      } else {
+        state.routine[day] = state.routine[day].filter(id => id !== cat.id);
+      }
+      saveState();
+    });
+    label.appendChild(cb);
+    label.appendChild(document.createTextNode(cat.name));
+    catList.appendChild(label);
+  });
 }
 
-// Botón de reiniciar global
-document.getElementById('btn-restart').addEventListener('click', () => {
-  if (confirm('¿Estás seguro de que quieres desmarcar todos los ejercicios completados de todos los grupos?')) {
-    state.categories.forEach(cat => {
-      cat.exercises.forEach(ex => {
-        ex.checked = false;
-      });
-    });
-    saveState();
-    render();
+// === Lógica Temporizador ===
+const timerFab = document.getElementById('fab-timer');
+const timerDisplay = document.getElementById('timer-display');
+const timerMenu = document.getElementById('fab-menu');
+
+function toggleTimerMenu(){
+  timerMenu.classList.toggle('show');
+}
+function formatTime(sec){
+  const m = Math.floor(sec / 60).toString().padStart(2, '0');
+  const s = (sec % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+function startTimer(seconds){
+  timerMenu.classList.remove('show');
+  timerFab.classList.remove('timer-done');
+  timerFab.classList.add('active');
+  clearInterval(timerInterval);
+  timeRemaining = seconds;
+  timerDisplay.textContent = `⏱️ ${formatTime(timeRemaining)}`;
+  
+  timerInterval = setInterval(() => {
+    timeRemaining--;
+    if(timeRemaining <= 0){
+      clearInterval(timerInterval);
+      timerDisplay.textContent = "¡TIEMPO!";
+      timerFab.classList.add('timer-done');
+      if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
+    } else {
+      timerDisplay.textContent = `⏱️ ${formatTime(timeRemaining)}`;
+    }
+  }, 1000);
+}
+function stopTimer(){
+  timerMenu.classList.remove('show');
+  clearInterval(timerInterval);
+  timerFab.classList.remove('active', 'timer-done');
+  timerDisplay.textContent = "⏱️ 00:00";
+}
+
+// Ocultar menu timer si haces clic fuera
+document.addEventListener('click', (e) => {
+  if(!timerFab.contains(e.target)){
+    timerMenu.classList.remove('show');
   }
 });
 
-// Exportar datos
+// Import/Export
 document.getElementById('btn-export').addEventListener('click', () => {
   const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
-  const downloadAnchorNode = document.createElement('a');
-  downloadAnchorNode.setAttribute("href", dataStr);
-  
-  const date = new Date().toISOString().split('T')[0];
-  downloadAnchorNode.setAttribute("download", `gimnasio_backup_${date}.json`);
-  document.body.appendChild(downloadAnchorNode);
-  downloadAnchorNode.click();
-  downloadAnchorNode.remove();
+  const a = document.createElement('a'); a.href = dataStr;
+  a.download = `gimnasio_${getLocalDateStr(new Date())}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
 });
-
-// Importar datos
-document.getElementById('file-import').addEventListener('change', function(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
+document.getElementById('file-import').addEventListener('change', function(e) {
+  const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = function(evt) {
     try {
-      const importedState = JSON.parse(e.target.result);
-      if (importedState && importedState.categories) {
-        state = importedState;
-        saveState();
-        activeCategory = state.categories[0] ? state.categories[0].id : null;
-        render();
-        alert('Datos importados correctamente.');
-      } else {
-        alert('El archivo no tiene el formato correcto.');
-      }
-    } catch (error) {
-      alert('Error al leer el archivo. Asegúrate de que sea un JSON válido.');
-    }
+      const imported = JSON.parse(evt.target.result);
+      if (imported && imported.categories) {
+        state = imported; saveState(); loadState();
+        alert('Datos importados.');
+      } else alert('Formato incorrecto.');
+    } catch (err) { alert('Error al leer el archivo.'); }
   };
-  reader.readAsText(file);
-  event.target.value = '';
+  reader.readAsText(file); e.target.value = '';
 });
 
 loadState();
 
 if('serviceWorker' in navigator){
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('service-worker.js').catch(err => {
-      console.error('Service worker no registrado:', err);
-    });
+    navigator.serviceWorker.register('service-worker.js').catch(err => console.error(err));
   });
 }
 </script>
