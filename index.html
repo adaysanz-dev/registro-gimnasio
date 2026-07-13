@@ -152,11 +152,11 @@
   .row{
     display:flex;
     align-items:center;
-    gap:10px;
+    gap:6px; /* Reducido un poco para que quepa todo */
     background:var(--surface);
     border:1px solid var(--border);
     border-radius:var(--radius);
-    padding:10px 10px;
+    padding:10px 8px;
     margin-bottom:8px;
   }
   .row.checked{
@@ -164,8 +164,8 @@
     background:linear-gradient(0deg, rgba(87,199,133,.08), rgba(87,199,133,.08)), var(--surface);
   }
   .check{
-    width:26px;
-    height:26px;
+    width:24px;
+    height:24px;
     border-radius:50%;
     border:2px solid var(--text-muted);
     flex-shrink:0;
@@ -184,14 +184,14 @@
   }
   .ex-name{
     flex:1;
-    font-size:15px;
+    font-size:14px;
     font-weight:500;
     background:transparent;
     border:none;
     color:var(--text);
     font-family:'Inter',sans-serif;
     outline:none;
-    min-width:0;
+    min-width:50px; /* Para que no colapse */
     padding:4px 2px;
   }
   .row.checked .ex-name{
@@ -199,22 +199,42 @@
     text-decoration:line-through;
     text-decoration-color:var(--good);
   }
-  .weight-wrap{
+  .reps-wrap {
     display:flex;
     align-items:baseline;
-    gap:3px;
     background:var(--surface-2);
     border-radius:6px;
-    padding:5px 8px;
+    padding:5px 4px;
     flex-shrink:0;
   }
-  .weight-input{
-    width:60px;
+  .reps-input {
+    width:40px;
     background:transparent;
     border:none;
     color:var(--text);
     font-family:'IBM Plex Mono',monospace;
-    font-size:14px;
+    font-size:13px;
+    font-weight:600;
+    text-align:center;
+    outline:none;
+  }
+  .reps-input::placeholder { color: var(--text-muted); font-weight: 400; font-size: 11px; }
+  .weight-wrap{
+    display:flex;
+    align-items:baseline;
+    gap:2px;
+    background:var(--surface-2);
+    border-radius:6px;
+    padding:5px 6px;
+    flex-shrink:0;
+  }
+  .weight-input{
+    width:50px; /* Ancho corregido */
+    background:transparent;
+    border:none;
+    color:var(--text);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
     font-weight:600;
     text-align:right;
     outline:none;
@@ -231,17 +251,17 @@
     gap: 2px;
     cursor: pointer;
     flex-shrink: 0;
-    padding: 0 4px;
+    padding: 0 2px;
   }
   .up-weight-box {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border: 1.5px solid var(--text-muted);
     border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
     color: transparent;
     transition: all .15s;
@@ -252,7 +272,7 @@
     color: var(--bg);
   }
   .up-weight-label {
-    font-size: 9px;
+    font-size: 8px;
     text-transform: uppercase;
     color: var(--text-muted);
     letter-spacing: 0.05em;
@@ -261,11 +281,27 @@
     color: var(--accent);
     font-weight: 600;
   }
+  .order-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .order-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 10px;
+    cursor: pointer;
+    padding: 0 2px;
+    line-height: 1;
+  }
+  .order-btn:hover { color: var(--accent); }
   .del{
     background:transparent;
     border:none;
     color:var(--text-muted);
-    font-size:16px;
+    font-size:15px;
     cursor:pointer;
     padding:4px 2px;
     flex-shrink:0;
@@ -290,34 +326,35 @@
   }
   .inline-form{
     display:flex;
-    gap:8px;
+    gap:6px;
     background:var(--surface);
     border:1px solid var(--accent);
     border-radius:var(--radius);
     padding:10px;
     margin-bottom:8px;
+    flex-wrap: wrap; /* Permite que salte de línea si la pantalla es muy estrecha */
   }
   .inline-form input[type=text]{
     flex:1;
     background:var(--surface-2);
     border:1px solid var(--border);
     border-radius:6px;
-    padding:8px 10px;
+    padding:8px;
     color:var(--text);
     font-family:'Inter',sans-serif;
-    font-size:14px;
+    font-size:13px;
     outline:none;
-    min-width:0;
+    min-width:100px;
   }
-  .inline-form input[type=number]{
-    width:65px;
+  .inline-form .reps-input, .inline-form input[type=number]{
+    width:65px; /* Ancho corregido para form de añadir */
     background:var(--surface-2);
     border:1px solid var(--border);
     border-radius:6px;
     padding:8px 6px;
     color:var(--text);
     font-family:'IBM Plex Mono',monospace;
-    font-size:14px;
+    font-size:13px;
     text-align:center;
     outline:none;
   }
@@ -330,14 +367,36 @@
     font-size:13px;
     cursor:pointer;
   }
-  .btn-ok{ background:var(--accent); color:var(--bg); }
+  .btn-ok{ background:var(--accent); color:var(--bg); flex-grow: 1; padding: 8px 0 !important; }
   .btn-cancel{ background:var(--surface-2); color:var(--text-muted); }
+  
+  .io-section {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 10px 20px;
+    margin-top: 20px;
+  }
+  .btn-io {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .btn-io:hover { border-color: var(--text-muted); color: var(--text); }
+  
   .footer-note{
     text-align:center;
     color:var(--text-muted);
     font-size:11px;
     letter-spacing:0.03em;
-    padding:20px 20px 4px;
+    padding:0 20px 20px;
   }
 </style>
 </head>
@@ -361,6 +420,13 @@
   </header>
   <nav class="tabs" id="tabs"></nav>
   <main id="main"></main>
+  
+  <div class="io-section">
+    <button class="btn-io" id="btn-export">Exportar Datos</button>
+    <button class="btn-io" id="btn-import" onclick="document.getElementById('file-import').click()">Importar Datos</button>
+    <input type="file" id="file-import" accept=".json" style="display: none;">
+  </div>
+  
   <div class="footer-note">Los datos se guardan solo en este dispositivo.</div>
 </div>
 
@@ -420,7 +486,6 @@ function renderTabs(){
     nameSpan.textContent = cat.name;
     btn.appendChild(nameSpan);
 
-    // Botón para eliminar grupo muscular activo
     if(cat.id === activeCategory) {
       const delCatBtn = document.createElement('div');
       delCatBtn.className = 'tab-del';
@@ -494,8 +559,8 @@ function renderMain(){
     empty.textContent = 'Aún no has añadido ejercicios de ' + cat.name.toLowerCase() + '.';
     main.appendChild(empty);
   } else {
-    cat.exercises.forEach(ex => {
-      main.appendChild(renderExerciseRow(cat, ex));
+    cat.exercises.forEach((ex, index) => {
+      main.appendChild(renderExerciseRow(cat, ex, index));
     });
   }
 
@@ -510,10 +575,11 @@ function renderMain(){
   }
 }
 
-function renderExerciseRow(cat, ex){
+function renderExerciseRow(cat, ex, index){
   const row = document.createElement('div');
   row.className = 'row' + (ex.checked ? ' checked' : '');
 
+  // Checkbox
   const check = document.createElement('div');
   check.className = 'check';
   check.textContent = '✓';
@@ -524,6 +590,7 @@ function renderExerciseRow(cat, ex){
   };
   row.appendChild(check);
 
+  // Nombre
   const nameInput = document.createElement('input');
   nameInput.className = 'ex-name';
   nameInput.type = 'text';
@@ -534,6 +601,22 @@ function renderExerciseRow(cat, ex){
   });
   row.appendChild(nameInput);
 
+  // Series/Repeticiones
+  const repsWrap = document.createElement('div');
+  repsWrap.className = 'reps-wrap';
+  const repsInput = document.createElement('input');
+  repsInput.className = 'reps-input';
+  repsInput.type = 'text';
+  repsInput.placeholder = '3x12';
+  repsInput.value = ex.reps || '';
+  repsInput.addEventListener('change', () => {
+    ex.reps = repsInput.value.trim();
+    saveState();
+  });
+  repsWrap.appendChild(repsInput);
+  row.appendChild(repsWrap);
+
+  // Peso
   const weightWrap = document.createElement('div');
   weightWrap.className = 'weight-wrap';
   const weightInput = document.createElement('input');
@@ -554,21 +637,17 @@ function renderExerciseRow(cat, ex){
   weightWrap.appendChild(unit);
   row.appendChild(weightWrap);
 
-  // Nuevo check de "Subir peso"
+  // Check de "Subir peso"
   const upWeightCheck = document.createElement('div');
   upWeightCheck.className = 'up-weight-check' + (ex.upWeight ? ' active' : '');
-  
   const upWeightBox = document.createElement('div');
   upWeightBox.className = 'up-weight-box';
   upWeightBox.textContent = '↑';
-  
   const upWeightLabel = document.createElement('span');
   upWeightLabel.className = 'up-weight-label';
   upWeightLabel.textContent = 'Subir';
-  
   upWeightCheck.appendChild(upWeightBox);
   upWeightCheck.appendChild(upWeightLabel);
-  
   upWeightCheck.onclick = () => {
     ex.upWeight = !ex.upWeight;
     saveState();
@@ -576,6 +655,41 @@ function renderExerciseRow(cat, ex){
   };
   row.appendChild(upWeightCheck);
 
+  // Botones de orden (Subir/Bajar)
+  const orderBtns = document.createElement('div');
+  orderBtns.className = 'order-btns';
+  
+  const btnUp = document.createElement('button');
+  btnUp.className = 'order-btn';
+  btnUp.innerHTML = '▲';
+  btnUp.style.visibility = index === 0 ? 'hidden' : 'visible';
+  btnUp.onclick = () => {
+    if(index > 0){
+      const temp = cat.exercises[index - 1];
+      cat.exercises[index - 1] = cat.exercises[index];
+      cat.exercises[index] = temp;
+      saveState(); render();
+    }
+  };
+  
+  const btnDown = document.createElement('button');
+  btnDown.className = 'order-btn';
+  btnDown.innerHTML = '▼';
+  btnDown.style.visibility = index === cat.exercises.length - 1 ? 'hidden' : 'visible';
+  btnDown.onclick = () => {
+    if(index < cat.exercises.length - 1){
+      const temp = cat.exercises[index + 1];
+      cat.exercises[index + 1] = cat.exercises[index];
+      cat.exercises[index] = temp;
+      saveState(); render();
+    }
+  };
+  
+  orderBtns.appendChild(btnUp);
+  orderBtns.appendChild(btnDown);
+  row.appendChild(orderBtns);
+
+  // Borrar
   const del = document.createElement('button');
   del.className = 'del';
   del.textContent = '✕';
@@ -593,12 +707,16 @@ function renderAddExerciseForm(cat){
   const form = document.createElement('div');
   form.className = 'inline-form';
   form.innerHTML = `
-    <input type="text" id="new-ex-name" placeholder="Nombre del ejercicio" maxlength="40">
+    <input type="text" id="new-ex-name" placeholder="Ejercicio" maxlength="40">
+    <input type="text" id="new-ex-reps" class="reps-input" placeholder="3x12" maxlength="10">
     <input type="number" id="new-ex-weight" placeholder="kg" step="0.5" min="0">
-    <button class="btn-ok" type="button">Añadir</button>
-    <button class="btn-cancel" type="button">✕</button>
+    <div style="width: 100%; display: flex; gap: 8px; margin-top: 4px;">
+      <button class="btn-cancel" type="button" style="padding: 8px 16px;">✕</button>
+      <button class="btn-ok" type="button">Guardar</button>
+    </div>
   `;
   const nameInput = form.querySelector('#new-ex-name');
+  const repsInput = form.querySelector('#new-ex-reps');
   const weightInput = form.querySelector('#new-ex-weight');
   const okBtn = form.querySelector('.btn-ok');
   const cancelBtn = form.querySelector('.btn-cancel');
@@ -607,8 +725,9 @@ function renderAddExerciseForm(cat){
     const name = nameInput.value.trim();
     if(!name){ addingExerciseFor = null; render(); return; }
     const weight = parseFloat(weightInput.value) || 0;
-    // Añadido upWeight: false por defecto
-    cat.exercises.push({ id: uid(), name, weight, checked: false, upWeight: false });
+    const reps = repsInput.value.trim();
+    
+    cat.exercises.push({ id: uid(), name, weight, reps, checked: false, upWeight: false });
     addingExerciseFor = null;
     saveState();
     render();
@@ -618,6 +737,7 @@ function renderAddExerciseForm(cat){
   cancelBtn.onclick = () => { addingExerciseFor = null; render(); };
   nameInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); confirmAdd(); } });
   weightInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); confirmAdd(); } });
+  repsInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); confirmAdd(); } });
 
   setTimeout(() => nameInput.focus(), 0);
   return form;
@@ -634,6 +754,46 @@ document.getElementById('btn-restart').addEventListener('click', () => {
     saveState();
     render();
   }
+});
+
+// Exportar datos
+document.getElementById('btn-export').addEventListener('click', () => {
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+  const downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute("href", dataStr);
+  
+  const date = new Date().toISOString().split('T')[0];
+  downloadAnchorNode.setAttribute("download", `gimnasio_backup_${date}.json`);
+  document.body.appendChild(downloadAnchorNode);
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+});
+
+// Importar datos
+document.getElementById('file-import').addEventListener('change', function(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const importedState = JSON.parse(e.target.result);
+      if (importedState && importedState.categories) {
+        state = importedState;
+        saveState();
+        activeCategory = state.categories[0] ? state.categories[0].id : null;
+        render();
+        alert('Datos importados correctamente.');
+      } else {
+        alert('El archivo no tiene el formato correcto.');
+      }
+    } catch (error) {
+      alert('Error al leer el archivo. Asegúrate de que sea un JSON válido.');
+    }
+  };
+  reader.readAsText(file);
+  // Limpiar el input para permitir importar el mismo archivo varias veces si se desea
+  event.target.value = '';
 });
 
 loadState();
