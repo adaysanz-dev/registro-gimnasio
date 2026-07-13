@@ -78,7 +78,7 @@
   .menu-btn-content { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
   .menu-btn-desc { font-size: 12px; color: var(--text-muted); font-weight: 400; font-family: 'Inter', sans-serif; }
 
-  /* Tracker Semanal */
+  /* Tracker Semanal (Círculos) */
   .week-tracker { display: flex; justify-content: space-between; gap: 4px; margin-bottom: 12px;}
   .day-dot { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .day-label { font-size: 10px; color: var(--text-muted); font-weight: 600; transition: all .2s; }
@@ -91,13 +91,27 @@
   .day-dot.active .day-circle { border-color: var(--accent); box-shadow: 0 0 8px rgba(255, 106, 57, 0.4); }
   .day-dot.completed .day-circle { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: bold; box-shadow: none; }
 
-  /* Planificación (Home) */
-  .today-plan {
-    display: flex; justify-content: space-between; align-items: center;
-    background: var(--surface); padding: 10px 14px; border-radius: var(--radius); border: 1px dashed var(--border);
+  /* Plan de la Semana (Home) */
+  .weekly-plan {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px; margin-top: 14px;
   }
-  .today-plan-text { font-size: 13px; color: var(--text); }
-  .today-plan-text strong { color: var(--accent); }
+  .weekly-plan-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+  }
+  .weekly-plan-title {
+    font-family: 'Oswald', sans-serif; font-size: 14px;
+    text-transform: uppercase; color: var(--accent); font-weight: 600; letter-spacing: 0.05em;
+  }
+  .weekly-day-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0; border-bottom: 1px dashed var(--border);
+  }
+  .weekly-day-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .weekly-day-name { font-size: 13px; color: var(--text); font-weight: 500; }
+  .weekly-day-cats { font-size: 12px; color: var(--text-muted); text-align: right; flex: 1; padding-left: 10px; }
+  .weekly-day-row.is-today .weekly-day-name { color: var(--accent); font-weight: 700; }
+  .weekly-day-row.is-today .weekly-day-cats { color: var(--text); font-weight: 600; }
 
   /* Tabs */
   .tabs{ display:flex; gap:6px; overflow-x:auto; padding:4px 18px 12px; scrollbar-width:none; }
@@ -395,7 +409,7 @@ function render() {
     homeView.style.display = 'block';
     workspaceView.style.display = 'none';
     ioSection.style.display = 'none';
-    timerBar.style.display = 'none'; // Se oculta visualmente pero el tiempo sigue corriendo en segundo plano
+    timerBar.style.display = 'none';
     
     renderHomeHeader(header);
     renderHomeContent(homeView);
@@ -467,12 +481,13 @@ function renderEditHeader(header) {
   `;
 }
 
-// --- Render Pantalla Principal (Link-Tree) ---
+// --- Render Pantalla Principal (Link-Tree y Calendario Semanal) ---
 function renderHomeContent(container) {
   const today = new Date();
   const currentDayNum = today.getDay();
   const weekDays = [1, 2, 3, 4, 5, 6, 0];
   const shortNames = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+  const fullNames = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   
   let diff = today.getDate() - currentDayNum + (currentDayNum === 0 ? -6 : 1);
   let monday = new Date(today.setDate(diff));
@@ -493,19 +508,37 @@ function renderHomeContent(container) {
     `;
   });
 
-  const todayCatIds = state.routine[new Date().getDay()] || [];
-  let planText = "Hoy: <strong>Descanso (o sin asignar)</strong>";
-  if(todayCatIds.length > 0){
-    const names = todayCatIds.map(id => { const c = getCategory(id); return c ? c.name : ''; }).filter(n => n);
-    planText = `Hoy toca: <strong>${names.join(', ')}</strong>`;
-  }
+  // Generar filas del calendario semanal
+  let weeklyRowsHTML = '';
+  weekDays.forEach((dNum, index) => {
+    const isToday = dNum === currentDayNum;
+    const catIds = state.routine[dNum] || [];
+    let catsText = 'Descanso';
+    
+    if (catIds.length > 0) {
+      catsText = catIds.map(id => {
+        const c = getCategory(id); return c ? c.name : '';
+      }).filter(n => n).join(', ');
+    }
+
+    weeklyRowsHTML += `
+      <div class="weekly-day-row ${isToday ? 'is-today' : ''}">
+        <div class="weekly-day-name">${isToday ? '▶ ' : ''}${fullNames[index]}</div>
+        <div class="weekly-day-cats">${catsText}</div>
+      </div>
+    `;
+  });
 
   container.innerHTML = `
     <div style="padding: 0 18px;">
       <div class="week-tracker">${trackerHTML}</div>
-      <div class="today-plan">
-        <div class="today-plan-text">${planText}</div>
-        <button class="btn-action" onclick="openPlanner()">Planificar</button>
+      
+      <div class="weekly-plan">
+        <div class="weekly-plan-header">
+          <div class="weekly-plan-title">Calendario Semanal</div>
+          <button class="btn-action" onclick="openPlanner()">Editar</button>
+        </div>
+        ${weeklyRowsHTML}
       </div>
     </div>
     
@@ -631,7 +664,7 @@ function renderExerciseRow(cat, ex, index){
 
   const nameInput = document.createElement('input'); nameInput.className = 'ex-name'; nameInput.type = 'text';
   nameInput.placeholder = 'Nombre ejercicio...'; nameInput.value = ex.name;
-  if(currentView === 'workout') nameInput.readOnly = true; // Protegido en workout
+  if(currentView === 'workout') nameInput.readOnly = true; 
   nameInput.addEventListener('change', () => { ex.name = nameInput.value.trim(); saveState(); });
   topRow.appendChild(nameInput);
 
@@ -761,7 +794,7 @@ function saveSession() {
       });
     });
     saveState(); 
-    goTo('home'); // Volvemos al inicio automáticamente
+    goTo('home'); 
   }
 }
 
