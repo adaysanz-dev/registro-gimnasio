@@ -65,6 +65,7 @@
   }
   .btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
   
+  /* Link-tree Menu */
   .menu-list { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; padding: 0 18px; }
   .menu-btn {
     background: var(--surface); border: 1px solid var(--border); color: var(--text);
@@ -77,6 +78,7 @@
   .menu-btn-content { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
   .menu-btn-desc { font-size: 12px; color: var(--text-muted); font-weight: 400; font-family: 'Inter', sans-serif; }
 
+  /* Tracker Semanal (Círculos) */
   .week-tracker { display: flex; justify-content: space-between; gap: 4px; margin-bottom: 12px;}
   .day-dot { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .day-label { font-size: 10px; color: var(--text-muted); font-weight: 600; transition: all .2s; }
@@ -89,6 +91,7 @@
   .day-dot.active .day-circle { border-color: var(--accent); box-shadow: 0 0 8px rgba(255, 106, 57, 0.4); }
   .day-dot.completed .day-circle { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: bold; box-shadow: none; }
 
+  /* Plan de la Semana (Home) */
   .weekly-plan {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 14px; margin-top: 14px;
@@ -110,6 +113,7 @@
   .weekly-day-row.is-today .weekly-day-name { color: var(--accent); font-weight: 700; }
   .weekly-day-row.is-today .weekly-day-cats { color: var(--text); font-weight: 600; }
 
+  /* Tabs */
   .tabs{ display:flex; gap:6px; overflow-x:auto; padding:4px 18px 12px; scrollbar-width:none; }
   .tabs::-webkit-scrollbar{display:none;}
   .tab{
@@ -124,6 +128,7 @@
   main{ flex:1; padding:6px 18px 0; }
   .empty{ text-align:center; color:var(--text-muted); font-size:14px; padding:60px 20px; line-height:1.6; }
   
+  /* Fila Ejercicio */
   .row{
     display:flex; flex-direction: column; background:var(--surface);
     border:1px solid var(--border); border-radius:var(--radius); padding:10px 12px; margin-bottom:8px;
@@ -151,6 +156,7 @@
     font-size:13px; font-weight:600; text-align:center; outline:none; padding: 0;
   }
   
+  /* Resaltado de Peso */
   .weight-wrap{
     display:flex; align-items:baseline; gap:2px; background:var(--surface-2); border-radius:6px; padding:5px 6px; flex-shrink:0; border: 1px solid transparent; transition: all 0.3s;
   }
@@ -173,6 +179,7 @@
   .order-btn { background: transparent; border: none; color: var(--text-muted); font-size: 10px; cursor: pointer; padding: 0 2px; }
   .del{ background:transparent; border:none; color:var(--text-muted); font-size:15px; cursor:pointer; flex-shrink:0; }
   
+  /* NUEVO: Tracker Serie a Serie */
   .sets-row { display: flex; gap: 8px; width: 100%; padding: 10px 0 4px 0; flex-wrap: wrap; }
   .set-box {
     width: 34px; height: 34px; border-radius: 8px; border: 2px solid var(--border);
@@ -197,6 +204,7 @@
   .io-section { display: flex; justify-content: center; gap: 12px; padding: 10px 20px; margin-top: 20px; }
   .footer-note{ text-align:center; color:var(--text-muted); font-size:11px; padding:0 20px 20px; margin-top: 20px; }
   
+  /* Modales */
   .modal-overlay {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8);
     display: none; align-items: center; justify-content: center; z-index: 100;
@@ -212,6 +220,7 @@
   .modal-cat-item { display: flex; align-items: center; gap: 10px; font-size: 14px; }
   .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
 
+  /* Historial List Items */
   .log-item {
     display: flex; justify-content: space-between; align-items: center;
     background: var(--surface-2); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border); font-size: 13px;
@@ -219,6 +228,7 @@
   .log-date { color: var(--text-muted); font-size: 11px; }
   .log-data { font-family: 'IBM Plex Mono', monospace; color: var(--text); font-weight: 600; }
 
+  /* Timer Bar Flotante */
   .timer-bar {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
     background: var(--surface); border: 1px solid var(--border);
@@ -253,16 +263,20 @@
 <body>
 <div id="app">
   <header id="main-header"></header>
+  
   <div id="home-view"></div>
+  
   <div id="workspace-view" style="display:none; flex-direction:column; flex:1;">
     <nav class="tabs" id="tabs"></nav>
     <main id="main"></main>
   </div>
+  
   <div class="io-section" id="io-section" style="display:none;">
     <button class="btn-action" id="btn-export">Exportar Datos</button>
     <button class="btn-action" id="btn-import" onclick="document.getElementById('file-import').click()">Importar Datos</button>
     <input type="file" id="file-import" accept=".json" style="display: none;">
   </div>
+  
   <div class="footer-note">Los datos se guardan en el dispositivo.</div>
 </div>
 
@@ -275,148 +289,624 @@
       <option value="5">Viernes</option><option value="6">Sábado</option><option value="0">Domingo</option>
     </select>
     <div class="modal-cat-list" id="planner-cats"></div>
-    <div class="modal-actions"><button class="btn-action" onclick="closePlanner()">Cerrar</button></div>
+    <div class="modal-actions">
+      <button class="btn-action" onclick="closePlanner()">Cerrar</button>
+    </div>
   </div>
 </div>
+
 <div class="modal-overlay" id="history-modal">
   <div class="modal-content">
     <h2 class="modal-title" id="history-title">Historial</h2>
     <div id="history-chart"></div>
     <div id="history-list" style="display:flex; flex-direction:column; gap:8px; margin-top:10px; max-height: 250px; overflow-y: auto;"></div>
-    <div class="modal-actions" style="margin-top: 15px;"><button class="btn-action" onclick="closeHistory()">Cerrar</button></div>
+    <div class="modal-actions" style="margin-top: 15px;">
+      <button class="btn-action" onclick="closeHistory()">Cerrar</button>
+    </div>
   </div>
 </div>
+
 <div class="timer-bar" id="timer-bar" style="display:none;">
-  <div class="timer-presets"><button class="timer-btn" id="tbtn-60" onclick="setTimer(60)">60s</button><button class="timer-btn" id="tbtn-90" onclick="setTimer(90)">90s</button><button class="timer-btn" id="tbtn-120" onclick="setTimer(120)">120s</button></div>
+  <div class="timer-presets">
+    <button class="timer-btn" id="tbtn-60" onclick="setTimer(60)">60s</button>
+    <button class="timer-btn" id="tbtn-90" onclick="setTimer(90)">90s</button>
+    <button class="timer-btn" id="tbtn-120" onclick="setTimer(120)">120s</button>
+  </div>
+  
   <div class="timer-display" id="timer-display">00:00</div>
-  <div class="timer-controls"><button class="timer-icon-btn" onclick="playTimer()" id="btn-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><button class="timer-icon-btn" onclick="pauseTimer()" id="btn-pause" style="display: none;"><svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></button><button class="timer-icon-btn" onclick="resetTimer()" id="btn-reset"><svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg></button></div>
+  
+  <div class="timer-controls">
+    <button class="timer-icon-btn" onclick="playTimer()" id="btn-play">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+    <button class="timer-icon-btn" onclick="pauseTimer()" id="btn-pause" style="display: none;">
+      <svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+    </button>
+    <button class="timer-icon-btn" onclick="resetTimer()" id="btn-reset">
+      <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+    </button>
+  </div>
 </div>
 
 <script>
 const STORAGE_KEY = 'gymlog-data';
 const DEFAULT_CATEGORIES = ['Pierna','Espalda','Pecho','Hombro','Brazo','Cardio'];
-let state = null, currentView = 'home', activeCategory = null, addingCategory = false;
-let timerInterval, timeRemaining = 0, originalTime = 0;
+
+let state = null;
+let currentView = 'home'; 
+let activeCategory = null;
+let addingCategory = false;
+
+// Variables Timer
+let timerInterval;
+let timeRemaining = 0;
+let originalTime = 0;
+let isTimerRunning = false;
 
 function uid(){ return Math.random().toString(36).slice(2,9); }
-function defaultState(){ return { categories: DEFAULT_CATEGORIES.map(name => ({ id: uid(), name, exercises: [] })), history: {}, routine: { 0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[] }, logs: [] }; }
+
+function defaultState(){
+  return {
+    categories: DEFAULT_CATEGORIES.map(name => ({ id: uid(), name, exercises: [] })),
+    history: {}, 
+    routine: { 0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[] },
+    logs: [] 
+  };
+}
+
 function loadState(){
   try{
-    state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultState();
-    if(!state.logs) state.logs = [];
+    const raw = localStorage.getItem(STORAGE_KEY);
+    state = raw ? JSON.parse(raw) : defaultState();
+    if(!state.history) state.history = {};
+    if(!state.routine) state.routine = { 0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[] };
+    if(!state.logs) state.logs = []; 
+    
+    // Migraciones
+    let hasCardio = false;
+    state.categories.forEach(c => {
+      if (c.name.toLowerCase() === 'core') { c.name = 'Cardio'; hasCardio = true; } 
+      else if (c.name.toLowerCase() === 'cardio') { hasCardio = true; }
+      
+      // Adaptar ejercicios viejos al nuevo sistema de Series Completadas
+      c.exercises.forEach(ex => {
+        if(typeof ex.completedSets === 'undefined') {
+           ex.completedSets = ex.checked ? (parseInt(ex.sets) || 1) : 0;
+        }
+      });
+    });
+    if (!hasCardio) state.categories.push({ id: uid(), name: 'Cardio', exercises: [] });
+    
   }catch(e){ state = defaultState(); }
   render();
 }
-function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-function getCategory(id){ return state.categories.find(c => c.id === id); }
-function getLocalDateStr(date) { return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split('T')[0]; }
 
+function saveState(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  catch(e){ console.error('No se pudo guardar', e); }
+}
+
+function getCategory(id){ return state.categories.find(c => c.id === id); }
+function getLocalDateStr(date) {
+  const d = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return d.toISOString().split('T')[0];
+}
+
+// ==== SISTEMA DE NAVEGACIÓN ====
 function goTo(view) {
   currentView = view;
-  if (view === 'workout') { activeCategory = (state.routine[new Date().getDay()] || [])[0] || null; }
-  else if (view === 'edit') { activeCategory = state.categories.length ? state.categories[0].id : null; }
+  if (view === 'workout') {
+    const todayCatIds = state.routine[new Date().getDay()] || [];
+    if (todayCatIds.length > 0) activeCategory = todayCatIds[0];
+    else activeCategory = null;
+  } else if (view === 'edit') {
+    if (state.categories.length > 0) activeCategory = state.categories[0].id;
+    else activeCategory = null;
+  }
   render();
 }
 
+// ==== MOTOR DE RENDERIZADO ====
 function render() {
-  const header = document.getElementById('main-header'), homeView = document.getElementById('home-view'), ws = document.getElementById('workspace-view'), io = document.getElementById('io-section'), tb = document.getElementById('timer-bar');
+  const header = document.getElementById('main-header');
+  const homeView = document.getElementById('home-view');
+  const workspaceView = document.getElementById('workspace-view');
+  const ioSection = document.getElementById('io-section');
+  const timerBar = document.getElementById('timer-bar');
+
   if (currentView === 'home') {
-    homeView.style.display = 'block'; ws.style.display = 'none'; io.style.display = 'none'; tb.style.display = 'none';
+    homeView.style.display = 'block'; workspaceView.style.display = 'none'; ioSection.style.display = 'none'; timerBar.style.display = 'none';
     renderHomeHeader(header); renderHomeContent(homeView);
-  } else {
-    homeView.style.display = 'none'; ws.style.display = 'flex'; io.style.display = currentView === 'edit' ? 'flex' : 'none';
-    tb.style.display = currentView === 'workout' ? 'flex' : 'none';
-    currentView === 'workout' ? renderWorkoutHeader(header) : renderEditHeader(header);
-    renderTabs(); renderMain();
+  } else if (currentView === 'workout') {
+    homeView.style.display = 'none'; workspaceView.style.display = 'flex'; ioSection.style.display = 'none'; timerBar.style.display = 'flex';
+    renderWorkoutHeader(header); renderTabs(); renderMain();
+  } else if (currentView === 'edit') {
+    homeView.style.display = 'none'; workspaceView.style.display = 'flex'; ioSection.style.display = 'flex'; timerBar.style.display = 'none';
+    renderEditHeader(header); renderTabs(); renderMain();
   }
 }
 
-function renderHomeHeader(h) { h.innerHTML = `<div class="header-top"><div class="header-title"><h1>Registro</h1></div></div>`; }
-function renderWorkoutHeader(h) { h.innerHTML = `<div class="header-top"><div class="header-title"><button class="btn-back" onclick="goTo('home')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button><h1>Entrenamiento</h1></div><button class="btn-action btn-primary" onclick="saveSession()">Guardar</button></div>`; }
-function renderEditHeader(h) { h.innerHTML = `<div class="header-top"><div class="header-title"><button class="btn-back" onclick="goTo('home')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button><h1>Planificar</h1></div></div>`; }
-
-function renderHomeContent(container) {
-  const today = new Date(), currentDayNum = today.getDay(), weekDays = [1, 2, 3, 4, 5, 6, 0], fullNames = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-  let trackerHTML = '', weeklyRowsHTML = '';
-  
-  weekDays.forEach((dNum, i) => {
-    const d = new Date(); d.setDate(d.getDate() - today.getDay() + (dNum === 0 ? 7 : dNum));
-    const isToday = dNum === currentDayNum, isCompleted = !!state.history[getLocalDateStr(d)];
-    trackerHTML += `<div class="day-dot ${isToday?'active':''} ${isCompleted?'completed':''}"><span class="day-label">${['L','M','X','J','V','S','D'][i]}</span><div class="day-circle">${isCompleted?'✓':''}</div></div>`;
-    
-    // Aquí es donde aplicamos el orden alfabético
-    const catIds = state.routine[dNum] || [];
-    const catNames = catIds.map(id => getCategory(id)?.name).filter(n => n).sort();
-    const catsText = catNames.length > 0 ? catNames.join(', ') : 'Descanso';
-
-    weeklyRowsHTML += `<div class="weekly-day-row ${isToday?'is-today':''}"><div class="weekly-day-name">${isToday?'▶ ':''}${fullNames[i]}</div><div class="weekly-day-cats">${catsText}</div></div>`;
-  });
-
-  container.innerHTML = `<div style="padding: 0 18px;"><div class="week-tracker">${trackerHTML}</div><div class="weekly-plan"><div class="weekly-plan-header"><div class="weekly-plan-title">Calendario Semanal</div><button class="btn-action" onclick="openPlanner()">Editar</button></div>${weeklyRowsHTML}</div></div><div class="menu-list"><div class="menu-btn" onclick="goTo('workout')"><div class="menu-btn-content"><span>💪 Entrenamiento Diario</span><span class="menu-btn-desc">Registra tus marcas de hoy.</span></div><span>→</span></div><div class="menu-btn" onclick="goTo('edit')"><div class="menu-btn-content"><span>📝 Planificar Ejercicios</span><span class="menu-btn-desc">Añade, organiza e importa.</span></div><span>→</span></div></div>`;
+// --- Renders Cabeceras ---
+function renderHomeHeader(header) {
+  header.innerHTML = `
+    <div class="header-top">
+      <div class="header-title">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+          <rect x="2" y="12" width="4" height="6" rx="1" fill="#ff6a39"/><rect x="24" y="12" width="4" height="6" rx="1" fill="#ff6a39"/>
+          <rect x="7" y="9" width="3" height="12" rx="1" fill="#ece9e4"/><rect x="20" y="9" width="3" height="12" rx="1" fill="#ece9e4"/>
+          <rect x="9" y="14" width="12" height="2" fill="#ece9e4"/>
+        </svg>
+        <div><h1>Registro</h1></div>
+      </div>
+    </div>
+  `;
+}
+function renderWorkoutHeader(header) {
+  header.innerHTML = `
+    <div class="header-top">
+      <div class="header-title">
+        <button class="btn-back" onclick="goTo('home')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+        <h1>Entrenamiento</h1>
+      </div>
+      <button class="btn-action btn-primary" onclick="saveSession()">Guardar Sesión</button>
+    </div>
+  `;
+}
+function renderEditHeader(header) {
+  header.innerHTML = `
+    <div class="header-top">
+      <div class="header-title">
+        <button class="btn-back" onclick="goTo('home')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+        <h1>Planificar</h1>
+      </div>
+    </div>
+  `;
 }
 
-// (El resto de funciones se mantienen iguales)
+// --- Render Home ---
+function renderHomeContent(container) {
+  const today = new Date();
+  const currentDayNum = today.getDay();
+  const weekDays = [1, 2, 3, 4, 5, 6, 0];
+  const shortNames = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+  const fullNames = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  
+  let diff = today.getDate() - currentDayNum + (currentDayNum === 0 ? -6 : 1);
+  let monday = new Date(today.setDate(diff));
+
+  let trackerHTML = '';
+  weekDays.forEach((dNum, index) => {
+    const loopDate = new Date(monday); loopDate.setDate(monday.getDate() + index);
+    const dateStr = getLocalDateStr(loopDate);
+    const isToday = dNum === new Date().getDay(); 
+    const isCompleted = !!state.history[dateStr];
+
+    trackerHTML += `
+      <div class="day-dot ${isToday ? 'active' : ''} ${isCompleted ? 'completed' : ''}">
+        <span class="day-label">${shortNames[index]}</span>
+        <div class="day-circle">${isCompleted ? '✓' : ''}</div>
+      </div>
+    `;
+  });
+
+  let weeklyRowsHTML = '';
+  weekDays.forEach((dNum, index) => {
+    const isToday = dNum === currentDayNum;
+    const catIds = state.routine[dNum] || [];
+    let catsText = 'Descanso';
+    if (catIds.length > 0) {
+      catsText = catIds.map(id => { const c = getCategory(id); return c ? c.name : ''; }).filter(n => n).join(', ');
+    }
+    weeklyRowsHTML += `
+      <div class="weekly-day-row ${isToday ? 'is-today' : ''}">
+        <div class="weekly-day-name">${isToday ? '▶ ' : ''}${fullNames[index]}</div>
+        <div class="weekly-day-cats">${catsText}</div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = `
+    <div style="padding: 0 18px;">
+      <div class="week-tracker">${trackerHTML}</div>
+      <div class="weekly-plan">
+        <div class="weekly-plan-header">
+          <div class="weekly-plan-title">Calendario Semanal</div>
+          <button class="btn-action" onclick="openPlanner()">Editar</button>
+        </div>
+        ${weeklyRowsHTML}
+      </div>
+    </div>
+    
+    <div class="menu-list">
+      <div class="menu-btn" onclick="goTo('workout')">
+        <div class="menu-btn-content">
+          <span>💪 Entrenamiento Diario</span>
+          <span class="menu-btn-desc">Registra tus marcas de hoy.</span>
+        </div>
+        <span class="menu-btn-icon">→</span>
+      </div>
+      <div class="menu-btn" onclick="goTo('edit')">
+        <div class="menu-btn-content">
+          <span>📝 Planificar Ejercicios</span>
+          <span class="menu-btn-desc">Añade, organiza e importa datos.</span>
+        </div>
+        <span class="menu-btn-icon">→</span>
+      </div>
+    </div>
+  `;
+}
+
+// --- Render Pestañas ---
 function renderTabs(){
   const tabs = document.getElementById('tabs'); tabs.innerHTML = '';
-  const cats = currentView === 'workout' ? state.categories.filter(c => (state.routine[new Date().getDay()] || []).includes(c.id)) : state.categories;
-  cats.forEach(cat => {
+  let catsToRender = [];
+  if (currentView === 'workout') {
+    const todayCatIds = state.routine[new Date().getDay()] || [];
+    catsToRender = state.categories.filter(c => todayCatIds.includes(c.id));
+  } else if (currentView === 'edit') {
+    catsToRender = state.categories;
+  }
+
+  catsToRender.forEach(cat => {
     const btn = document.createElement('div'); btn.className = 'tab' + (cat.id === activeCategory ? ' active' : '');
-    btn.innerHTML = `<span>${cat.name}</span>` + (cat.id === activeCategory && currentView === 'edit' ? '<div class="tab-del">✕</div>' : '');
-    if(cat.id === activeCategory && currentView === 'edit') btn.querySelector('.tab-del').onclick = (e) => { e.stopPropagation(); if(confirm('Eliminar?')){ state.categories = state.categories.filter(c=>c.id!==cat.id); render(); }};
+    const nameSpan = document.createElement('span'); nameSpan.textContent = cat.name; btn.appendChild(nameSpan);
+
+    if(cat.id === activeCategory && currentView === 'edit') {
+      const delCatBtn = document.createElement('div'); delCatBtn.className = 'tab-del'; delCatBtn.textContent = '✕';
+      delCatBtn.onclick = (e) => {
+        e.stopPropagation();
+        if(confirm(`¿Eliminar grupo "${cat.name}"?`)){
+          state.categories = state.categories.filter(c => c.id !== cat.id);
+          for(let d in state.routine) state.routine[d] = state.routine[d].filter(id => id !== cat.id);
+          activeCategory = state.categories[0] ? state.categories[0].id : null;
+          saveState(); render();
+        }
+      };
+      btn.appendChild(delCatBtn);
+    }
     btn.onclick = () => { activeCategory = cat.id; render(); };
     tabs.appendChild(btn);
   });
+
+  if(currentView === 'edit') {
+    if(addingCategory){
+      const form = document.createElement('form'); form.style.display = 'flex'; form.style.gap = '6px';
+      form.innerHTML = `<input type="text" id="new-cat-input" placeholder="Nombre" maxlength="20" style="width:100px;background:var(--surface-2);border:1px solid var(--accent);border-radius:8px;padding:8px;color:var(--text);font-size:13px;outline:none;">`;
+      tabs.appendChild(form); const input = form.querySelector('#new-cat-input'); setTimeout(() => input.focus(), 0);
+      input.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); confirmAddCategory(input.value); } if(e.key === 'Escape'){ addingCategory = false; render(); }});
+      input.addEventListener('blur', () => confirmAddCategory(input.value));
+    } else {
+      const addBtn = document.createElement('div'); addBtn.className = 'tab add-tab'; addBtn.textContent = '+';
+      addBtn.onclick = () => { addingCategory = true; render(); };
+      tabs.appendChild(addBtn);
+    }
+  }
 }
+
+// --- Render Ejercicios ---
 function renderMain(){
   const main = document.getElementById('main'); main.innerHTML = '';
   const cat = getCategory(activeCategory);
-  if(!cat) return;
-  cat.exercises.forEach((ex, i) => main.appendChild(renderExerciseRow(cat, ex, i)));
-  if(currentView === 'edit') {
-    const add = document.createElement('button'); add.className = 'add-ex-btn'; add.textContent = '+ Añadir ejercicio';
-    add.onclick = () => { cat.exercises.push({ id: uid(), name: '', weight: 0, sets: '', repsCount: '', completedSets: 0 }); saveState(); render(); };
-    main.appendChild(add);
+  
+  if(!cat){ 
+    if (currentView === 'workout') { main.innerHTML = '<div class="empty">Día de descanso o músculos no asignados.<br>Ve a Planificar en la pantalla principal.</div>'; }
+    else { main.innerHTML = '<div class="empty">Crea un grupo muscular con el botón +</div>'; }
+    return; 
+  }
+
+  cat.exercises.forEach((ex, index) => main.appendChild(renderExerciseRow(cat, ex, index)));
+
+  if (currentView === 'edit') {
+    const addBtn = document.createElement('button'); addBtn.className = 'add-ex-btn'; addBtn.textContent = '+ Añadir ejercicio';
+    addBtn.onclick = () => {
+      cat.exercises.push({ id: uid(), name: '', weight: 0, sets: '', repsCount: '', completedSets: 0, upWeight: false, notes: '' });
+      saveState(); render();
+    };
+    main.appendChild(addBtn);
   }
 }
-function renderExerciseRow(cat, ex, i){
+
+function renderExerciseRow(cat, ex, index){
   const row = document.createElement('div');
-  const numSets = parseInt(ex.sets) || 0, comp = ex.completedSets || 0;
-  row.className = 'row' + (numSets > 0 && comp >= numSets ? ' checked' : '');
-  row.innerHTML = `<div class="row-top"><input class="ex-name" ${currentView==='workout'?'readonly':''} value="${ex.name}" onchange="ex.name=this.value;saveState()"><button class="btn-history" onclick="openHistory(ex)">📈</button><div class="sets-reps-wrap"><input class="sets-reps-input" type="number" value="${ex.sets}" onchange="ex.sets=this.value;saveState();render()">x<input class="sets-reps-input" type="number" value="${ex.repsCount}" onchange="ex.repsCount=this.value;saveState()"></div><div class="weight-wrap ${ex.upWeight?'highlight':''}"><input class="weight-input" type="number" value="${ex.weight}" onchange="ex.weight=parseFloat(this.value);saveState()"><span class="weight-unit">kg</span></div><div class="up-weight-check ${ex.upWeight?'active':''}" onclick="ex.upWeight=!ex.upWeight;saveState();render()"><div class="up-weight-box">↑</div></div>${currentView==='edit'?'<button class="del" onclick="cat.exercises.splice('+i+',1);saveState();render()">✕</button>':''}</div><input class="notes-input" placeholder="Notas..." value="${ex.notes||''}" onchange="ex.notes=this.value;saveState()">`;
-  if(currentView === 'workout') {
-     const sRow = document.createElement('div'); sRow.className = 'sets-row';
-     for(let j=0; j<numSets; j++){ const sBox = document.createElement('div'); sBox.className = 'set-box ' + (j<comp?'checked':''); sBox.textContent = j+1; sBox.onclick = () => { ex.completedSets = (j<comp) ? j : j+1; saveState(); if(ex.completedSets > comp) triggerAutoTimer(); render(); }; sRow.appendChild(sBox); }
-     row.appendChild(sRow);
+  
+  const numSets = parseInt(ex.sets) || 0;
+  const completed = ex.completedSets || 0;
+  const isFullyCompleted = numSets > 0 && completed >= numSets;
+  
+  row.className = 'row' + (isFullyCompleted ? ' checked' : '');
+
+  const topRow = document.createElement('div'); topRow.className = 'row-top';
+
+  const nameInput = document.createElement('input'); nameInput.className = 'ex-name'; nameInput.type = 'text';
+  nameInput.placeholder = 'Nombre ejercicio...'; nameInput.value = ex.name;
+  if(currentView === 'workout') nameInput.readOnly = true; 
+  nameInput.addEventListener('change', () => { ex.name = nameInput.value.trim(); saveState(); });
+  topRow.appendChild(nameInput);
+
+  const histBtn = document.createElement('button'); histBtn.className = 'btn-history'; histBtn.innerHTML = '📈';
+  histBtn.onclick = () => openHistory(ex);
+  topRow.appendChild(histBtn);
+
+  const setsRepsWrap = document.createElement('div'); setsRepsWrap.className = 'sets-reps-wrap';
+  const setsIn = document.createElement('input'); setsIn.className = 'sets-reps-input'; setsIn.type = 'number'; setsIn.placeholder = '3'; setsIn.value = ex.sets;
+  setsIn.addEventListener('change', () => { ex.sets = parseInt(setsIn.value) || ''; saveState(); render(); });
+  const sep = document.createElement('span'); sep.textContent = 'x';
+  const repsIn = document.createElement('input'); repsIn.className = 'sets-reps-input'; repsIn.type = 'number'; repsIn.placeholder = '12'; repsIn.value = ex.repsCount;
+  repsIn.addEventListener('change', () => { ex.repsCount = parseInt(repsIn.value) || ''; saveState(); });
+  setsRepsWrap.append(setsIn, sep, repsIn);
+  topRow.appendChild(setsRepsWrap);
+
+  const weightWrap = document.createElement('div');
+  weightWrap.className = 'weight-wrap' + (ex.upWeight ? ' highlight' : ''); 
+  const weightIn = document.createElement('input'); weightIn.className = 'weight-input'; weightIn.type = 'number'; weightIn.step = '0.5'; weightIn.value = ex.weight;
+  weightIn.addEventListener('change', () => { ex.weight = parseFloat(weightIn.value) || 0; saveState(); });
+  const unit = document.createElement('span'); unit.className = 'weight-unit'; unit.textContent = 'kg';
+  weightWrap.append(weightIn, unit);
+  topRow.appendChild(weightWrap);
+
+  const upWeight = document.createElement('div'); upWeight.className = 'up-weight-check' + (ex.upWeight ? ' active' : '');
+  upWeight.innerHTML = `<div class="up-weight-box">↑</div><span class="up-weight-label">Subir</span>`;
+  upWeight.onclick = () => { ex.upWeight = !ex.upWeight; saveState(); render(); };
+  topRow.appendChild(upWeight);
+
+  if (currentView === 'edit') {
+    const orderBtns = document.createElement('div'); orderBtns.className = 'order-btns';
+    const btnUp = document.createElement('button'); btnUp.className = 'order-btn'; btnUp.innerHTML = '▲'; btnUp.style.visibility = index === 0 ? 'hidden' : 'visible';
+    btnUp.onclick = () => { const t = cat.exercises[index-1]; cat.exercises[index-1] = cat.exercises[index]; cat.exercises[index] = t; saveState(); render(); };
+    const btnDown = document.createElement('button'); btnDown.className = 'order-btn'; btnDown.innerHTML = '▼'; btnDown.style.visibility = index === cat.exercises.length-1 ? 'hidden' : 'visible';
+    btnDown.onclick = () => { const t = cat.exercises[index+1]; cat.exercises[index+1] = cat.exercises[index]; cat.exercises[index] = t; saveState(); render(); };
+    orderBtns.append(btnUp, btnDown);
+    topRow.appendChild(orderBtns);
+
+    const del = document.createElement('button'); del.className = 'del'; del.textContent = '✕';
+    del.onclick = () => { cat.exercises = cat.exercises.filter(e => e.id !== ex.id); saveState(); render(); };
+    topRow.appendChild(del);
   }
+
+  row.appendChild(topRow);
+
+  // NUEVO: CAJAS DE SERIES (Solo en Workout)
+  if (currentView === 'workout') {
+     const setsRow = document.createElement('div');
+     setsRow.className = 'sets-row';
+     
+     if (numSets > 0) {
+        for(let i = 0; i < numSets; i++) {
+           const setBox = document.createElement('div');
+           const isChecked = i < completed;
+           setBox.className = 'set-box ' + (isChecked ? 'checked' : '');
+           setBox.textContent = i + 1;
+           setBox.onclick = () => {
+              if (isChecked) {
+                 ex.completedSets = i; // Desmarca esta y las siguientes
+              } else {
+                 ex.completedSets = i + 1; // Marca hasta esta
+                 if(navigator.vibrate) navigator.vibrate(50); // Pequeña vibración
+                 triggerAutoTimer();
+              }
+              saveState(); render();
+           };
+           setsRow.appendChild(setBox);
+        }
+     } else {
+        const msg = document.createElement('span');
+        msg.style.fontSize = '11px'; msg.style.color = 'var(--text-muted)';
+        msg.textContent = 'Define n.º de series arriba para ver las casillas.';
+        setsRow.appendChild(msg);
+     }
+     row.appendChild(setsRow);
+  }
+
+  const bottomRow = document.createElement('div'); bottomRow.className = 'row-bottom';
+  const notes = document.createElement('input'); notes.className = 'notes-input'; notes.type = 'text'; notes.placeholder = 'Notas...'; notes.value = ex.notes || '';
+  notes.addEventListener('change', () => { ex.notes = notes.value; saveState(); });
+  bottomRow.appendChild(notes);
+  row.appendChild(bottomRow);
+
   return row;
 }
 
-function playBeep() {
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
-  const osc = ctx.createOscillator(); const gain = ctx.createGain();
-  osc.connect(gain); gain.connect(ctx.destination);
-  osc.frequency.setValueAtTime(880, ctx.currentTime);
-  gain.gain.setValueAtTime(1, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
-  osc.start(); osc.stop(ctx.currentTime + 0.5);
+// === HISTORIAL ===
+function openHistory(ex) {
+  const modal = document.getElementById('history-modal');
+  document.getElementById('history-title').textContent = ex.name || 'Sin nombre';
+  const chartContainer = document.getElementById('history-chart');
+  const listContainer = document.getElementById('history-list');
+  
+  const logs = state.logs.filter(l => l.id === ex.id).sort((a,b) => a.date.localeCompare(b.date));
+  
+  if(logs.length === 0) {
+    chartContainer.innerHTML = '';
+    listContainer.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:13px; padding:20px;">Aún no has guardado sesiones.</div>';
+  } else {
+    if (logs.length > 1) {
+      const width = 300, height = 120, pad = 20;
+      const weights = logs.map(l => l.weight);
+      const minW = Math.min(...weights);
+      const maxW = Math.max(...weights);
+      const range = maxW - minW === 0 ? 1 : maxW - minW;
+      
+      const pts = logs.map((l, i) => {
+        const x = pad + (i / (logs.length - 1)) * (width - pad * 2);
+        const y = height - pad - ((l.weight - minW) / range) * (height - pad * 2);
+        return `${x},${y}`;
+      }).join(' ');
+
+      const circles = logs.map((l, i) => {
+        const x = pad + (i / (logs.length - 1)) * (width - pad * 2);
+        const y = height - pad - ((l.weight - minW) / range) * (height - pad * 2);
+        return `<circle cx="${x}" cy="${y}" r="4" fill="var(--bg)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="${x}" y="${y - 12}" fill="var(--text-muted)" font-size="9" text-anchor="middle" font-family="monospace">${l.weight}</text>`;
+      }).join('');
+
+      chartContainer.innerHTML = `
+        <svg viewBox="0 0 ${width} ${height}" style="width:100%; height:120px; background:var(--surface-2); border-radius:8px; margin-bottom:15px; display:block;">
+          <polyline fill="none" stroke="var(--accent)" stroke-width="2" points="${pts}" />
+          ${circles}
+        </svg>
+      `;
+    } else {
+      chartContainer.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding-bottom:15px;">Registra otra sesión para ver el gráfico.</div>';
+    }
+
+    listContainer.innerHTML = [...logs].reverse().map(l => `
+      <div class="log-item">
+        <span class="log-date">${l.date}</span>
+        <span class="log-data">${l.sets}x${l.repsCount} &mdash; <span style="color:var(--accent);">${l.weight} kg</span></span>
+      </div>
+    `).join('');
+  }
+  modal.classList.add('active');
 }
-function triggerAutoTimer() { setTimer(originalTime || 90); document.getElementById('timer-bar').style.display = 'flex'; playTimer(); }
-function setTimer(s) { clearInterval(timerInterval); isTimerRunning=false; timeRemaining=originalTime=s; document.getElementById('timer-display').textContent=formatTime(s); document.querySelectorAll('.timer-btn').forEach(b=>b.classList.remove('selected')); document.getElementById('tbtn-'+s).classList.add('selected'); document.getElementById('timer-bar').classList.remove('timer-done'); }
-function playTimer() { isTimerRunning=true; document.getElementById('btn-play').style.display='none'; document.getElementById('btn-pause').style.display='flex'; clearInterval(timerInterval); timerInterval = setInterval(()=>{ if(timeRemaining-- <= 1){ clearInterval(timerInterval); playBeep(); setTimeout(playBeep, 600); document.getElementById('timer-bar').classList.add('timer-done'); } document.getElementById('timer-display').textContent=formatTime(timeRemaining); }, 1000); }
-function pauseTimer() { clearInterval(timerInterval); document.getElementById('btn-play').style.display='flex'; document.getElementById('btn-pause').style.display='none'; }
-function resetTimer() { clearInterval(timerInterval); timeRemaining=originalTime; document.getElementById('timer-display').textContent=formatTime(timeRemaining); document.getElementById('timer-bar').classList.remove('timer-done'); document.getElementById('btn-play').style.display='flex'; document.getElementById('btn-pause').style.display='none'; }
+function closeHistory() { document.getElementById('history-modal').classList.remove('active'); }
+
+// === GUARDAR SESIÓN ACTUALIZADO ===
 function saveSession() {
-  if(!state.categories.some(c=>c.exercises.some(ex=>(ex.completedSets||0)>0))) return alert("No hay series marcadas.");
-  if(confirm('¿Guardar sesión?')) {
-    const today = getLocalDateStr(new Date()); state.history[today] = true;
-    state.categories.forEach(c=>c.exercises.forEach(ex=>{ if((ex.completedSets||0)>0) state.logs.push({id:ex.id, date:today, weight:ex.weight, sets:ex.completedSets, repsCount:ex.repsCount}); ex.completedSets=0; }));
-    saveState(); goTo('home');
+  let hasChecked = false;
+  state.categories.forEach(cat => { cat.exercises.forEach(ex => { if((ex.completedSets || 0) > 0) hasChecked = true; }); });
+
+  if(!hasChecked) { alert("No has marcado ninguna serie completada aún."); return; }
+
+  if (confirm('¿Terminar entrenamiento? Se guardarán los pesos y volverás al inicio.')) {
+    const todayStr = getLocalDateStr(new Date());
+    state.history[todayStr] = true;
+    
+    state.categories.forEach(cat => {
+      cat.exercises.forEach(ex => {
+        if((ex.completedSets || 0) > 0) {
+          state.logs.push({ id: ex.id, date: todayStr, weight: ex.weight, sets: ex.completedSets, repsCount: ex.repsCount });
+          ex.completedSets = 0; // Reiniciamos las cajas para la próxima
+        }
+      });
+    });
+    saveState(); 
+    goTo('home'); 
   }
 }
-function openHistory(ex) { /* Igual que antes */ }
-function closeHistory() { document.getElementById('history-modal').classList.remove('active'); }
-function openPlanner(){ document.getElementById('planner-modal').classList.add('active'); }
-function closePlanner(){ document.getElementById('planner-modal').classList.remove('active'); render(); }
+
+// Modal Planificador
+const plannerModal = document.getElementById('planner-modal');
+const daySelect = document.getElementById('planner-day');
+const catList = document.getElementById('planner-cats');
+function openPlanner(){ daySelect.value = new Date().getDay().toString(); renderPlannerCats(); plannerModal.classList.add('active'); }
+function closePlanner(){ plannerModal.classList.remove('active'); render(); }
+daySelect.addEventListener('change', renderPlannerCats);
+function renderPlannerCats(){
+  catList.innerHTML = ''; const day = daySelect.value; const assigned = state.routine[day] || [];
+  if(state.categories.length === 0){ catList.innerHTML = '<span style="color:var(--text-muted);font-size:13px;">Crea primero grupos musculares.</span>'; return; }
+  state.categories.forEach(cat => {
+    const label = document.createElement('label'); label.className = 'modal-cat-item';
+    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = assigned.includes(cat.id);
+    cb.addEventListener('change', (e) => {
+      if(e.target.checked){ if(!state.routine[day].includes(cat.id)) state.routine[day].push(cat.id); }
+      else { state.routine[day] = state.routine[day].filter(id => id !== cat.id); }
+      saveState();
+    });
+    label.append(cb, document.createTextNode(cat.name)); catList.appendChild(label);
+  });
+}
+
+// === TEMPORIZADOR INTELIGENTE ===
+function formatTime(sec){ 
+  const m = Math.floor(sec / 60).toString().padStart(2, '0'); 
+  const s = (sec % 60).toString().padStart(2, '0'); 
+  return `${m}:${s}`; 
+}
+
+function triggerAutoTimer() {
+  if (originalTime === 0) {
+      setTimer(90); // Por defecto si no se ha elegido
+  } else {
+      setTimer(originalTime); // Resetea el tiempo seleccionado
+  }
+  document.getElementById('timer-bar').style.display = 'flex';
+  playTimer();
+}
+
+function setTimer(seconds) {
+  clearInterval(timerInterval);
+  isTimerRunning = false;
+  timeRemaining = seconds;
+  originalTime = seconds;
+  
+  document.getElementById('timer-display').textContent = formatTime(timeRemaining);
+  document.querySelectorAll('.timer-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById(`tbtn-${seconds}`).classList.add('selected');
+  
+  document.getElementById('btn-play').style.display = 'flex';
+  document.getElementById('btn-pause').style.display = 'none';
+  const bar = document.getElementById('timer-bar');
+  bar.classList.remove('timer-done', 'active');
+}
+
+function playTimer() {
+  if (originalTime === 0) return; 
+  if (timeRemaining <= 0) timeRemaining = originalTime; 
+  
+  isTimerRunning = true;
+  document.getElementById('btn-play').style.display = 'none';
+  document.getElementById('btn-pause').style.display = 'flex';
+  
+  const bar = document.getElementById('timer-bar');
+  bar.classList.remove('timer-done');
+  bar.classList.add('active');
+  
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeRemaining--;
+    if (timeRemaining <= 0) {
+      clearInterval(timerInterval);
+      isTimerRunning = false;
+      document.getElementById('timer-display').textContent = "00:00";
+      bar.classList.add('timer-done');
+      bar.classList.remove('active');
+      document.getElementById('btn-play').style.display = 'flex';
+      document.getElementById('btn-pause').style.display = 'none';
+      if(navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
+    } else {
+      document.getElementById('timer-display').textContent = formatTime(timeRemaining);
+    }
+  }, 1000);
+}
+
+function pauseTimer() {
+  isTimerRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('btn-play').style.display = 'flex';
+  document.getElementById('btn-pause').style.display = 'none';
+  document.getElementById('timer-bar').classList.remove('active');
+}
+
+function resetTimer() {
+  isTimerRunning = false;
+  clearInterval(timerInterval);
+  timeRemaining = originalTime;
+  document.getElementById('timer-display').textContent = formatTime(timeRemaining);
+  document.getElementById('btn-play').style.display = 'flex';
+  document.getElementById('btn-pause').style.display = 'none';
+  document.getElementById('timer-bar').classList.remove('timer-done', 'active');
+}
+
+// === IMPORTAR/EXPORTAR ===
+document.getElementById('btn-export').addEventListener('click', () => {
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+  const a = document.createElement('a'); a.href = dataStr; a.download = `gimnasio_${getLocalDateStr(new Date())}.json`; document.body.appendChild(a); a.click(); a.remove();
+});
+document.getElementById('file-import').addEventListener('change', function(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    try {
+      const imported = JSON.parse(evt.target.result);
+      if (imported && imported.categories) { state = imported; saveState(); render(); alert('Datos importados.'); }
+      else alert('Formato incorrecto.');
+    } catch (err) { alert('Error al leer el archivo.'); }
+  };
+  reader.readAsText(file); e.target.value = '';
+});
+
 loadState();
+if('serviceWorker' in navigator){ window.addEventListener('load', () => { navigator.serviceWorker.register('service-worker.js').catch(err => console.error(err)); }); }
 </script>
 </body>
 </html>
