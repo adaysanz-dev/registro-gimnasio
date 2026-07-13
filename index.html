@@ -38,6 +38,17 @@
     -webkit-tap-highlight-color:transparent;
     overscroll-behavior-y:contain;
   }
+  
+  /* Ocultar flechas en inputs numéricos */
+  input[type=number]::-webkit-inner-spin-button, 
+  input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+  }
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+
   #app{
     max-width:520px;
     margin:0 auto;
@@ -152,7 +163,7 @@
   .row{
     display:flex;
     align-items:center;
-    gap:6px; /* Reducido un poco para que quepa todo */
+    gap:6px; 
     background:var(--surface);
     border:1px solid var(--border);
     border-radius:var(--radius);
@@ -191,7 +202,7 @@
     color:var(--text);
     font-family:'Inter',sans-serif;
     outline:none;
-    min-width:50px; /* Para que no colapse */
+    min-width:50px; 
     padding:4px 2px;
   }
   .row.checked .ex-name{
@@ -199,16 +210,22 @@
     text-decoration:line-through;
     text-decoration-color:var(--good);
   }
-  .reps-wrap {
+  
+  /* Nuevo estilo para Sets x Reps */
+  .sets-reps-wrap {
     display:flex;
-    align-items:baseline;
+    align-items:center;
+    gap:2px;
     background:var(--surface-2);
     border-radius:6px;
     padding:5px 4px;
     flex-shrink:0;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
   }
-  .reps-input {
-    width:40px;
+  .sets-reps-input {
+    width:24px;
     background:transparent;
     border:none;
     color:var(--text);
@@ -217,8 +234,10 @@
     font-weight:600;
     text-align:center;
     outline:none;
+    padding: 0;
   }
-  .reps-input::placeholder { color: var(--text-muted); font-weight: 400; font-size: 11px; }
+  .sets-reps-input::placeholder { color: var(--text-muted); font-weight: 400; font-size: 12px; }
+
   .weight-wrap{
     display:flex;
     align-items:baseline;
@@ -229,7 +248,7 @@
     flex-shrink:0;
   }
   .weight-input{
-    width:50px; /* Ancho corregido */
+    width:50px; 
     background:transparent;
     border:none;
     color:var(--text);
@@ -332,7 +351,7 @@
     border-radius:var(--radius);
     padding:10px;
     margin-bottom:8px;
-    flex-wrap: wrap; /* Permite que salte de línea si la pantalla es muy estrecha */
+    flex-wrap: wrap; 
   }
   .inline-form input[type=text]{
     flex:1;
@@ -346,8 +365,30 @@
     outline:none;
     min-width:100px;
   }
-  .inline-form .reps-input, .inline-form input[type=number]{
-    width:65px; /* Ancho corregido para form de añadir */
+  .inline-form-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 6px;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .inline-form-group input[type=number]{
+    width:32px;
+    background:transparent;
+    border:none;
+    color:var(--text);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    text-align:center;
+    outline:none;
+    padding: 8px 0;
+  }
+  .inline-form > input[type=number]{
+    width:65px; 
     background:var(--surface-2);
     border:1px solid var(--border);
     border-radius:6px;
@@ -601,20 +642,55 @@ function renderExerciseRow(cat, ex, index){
   });
   row.appendChild(nameInput);
 
-  // Series/Repeticiones
-  const repsWrap = document.createElement('div');
-  repsWrap.className = 'reps-wrap';
-  const repsInput = document.createElement('input');
-  repsInput.className = 'reps-input';
-  repsInput.type = 'text';
-  repsInput.placeholder = '3x12';
-  repsInput.value = ex.reps || '';
-  repsInput.addEventListener('change', () => {
-    ex.reps = repsInput.value.trim();
+  // --- Lógica de migración si venías de "3x12" a variables separadas ---
+  let initSets = ex.sets !== undefined ? ex.sets : '';
+  let initReps = ex.repsCount !== undefined ? ex.repsCount : '';
+  
+  if (typeof ex.reps === 'string') {
+    if (ex.reps.includes('x')) {
+      const parts = ex.reps.split('x');
+      initSets = parts[0].trim();
+      initReps = parts[1].trim();
+    }
+    delete ex.reps; // Borramos la antigua
+    ex.sets = initSets;
+    ex.repsCount = initReps;
+    saveState(); // Guardamos el formato nuevo
+  }
+
+  // --- Nuevos campos numéricos para Sets y Reps ---
+  const setsRepsWrap = document.createElement('div');
+  setsRepsWrap.className = 'sets-reps-wrap';
+  
+  const setsInput = document.createElement('input');
+  setsInput.className = 'sets-reps-input';
+  setsInput.type = 'number';
+  setsInput.min = '0';
+  setsInput.placeholder = '3';
+  setsInput.value = initSets;
+  setsInput.addEventListener('change', () => {
+    ex.sets = parseInt(setsInput.value) || '';
     saveState();
   });
-  repsWrap.appendChild(repsInput);
-  row.appendChild(repsWrap);
+
+  const separator = document.createElement('span');
+  separator.textContent = 'x';
+
+  const repsInput = document.createElement('input');
+  repsInput.className = 'sets-reps-input';
+  repsInput.type = 'number';
+  repsInput.min = '0';
+  repsInput.placeholder = '12';
+  repsInput.value = initReps;
+  repsInput.addEventListener('change', () => {
+    ex.repsCount = parseInt(repsInput.value) || '';
+    saveState();
+  });
+
+  setsRepsWrap.appendChild(setsInput);
+  setsRepsWrap.appendChild(separator);
+  setsRepsWrap.appendChild(repsInput);
+  row.appendChild(setsRepsWrap);
 
   // Peso
   const weightWrap = document.createElement('div');
@@ -708,7 +784,11 @@ function renderAddExerciseForm(cat){
   form.className = 'inline-form';
   form.innerHTML = `
     <input type="text" id="new-ex-name" placeholder="Ejercicio" maxlength="40">
-    <input type="text" id="new-ex-reps" class="reps-input" placeholder="3x12" maxlength="10">
+    <div class="inline-form-group">
+      <input type="number" id="new-ex-sets" placeholder="3" min="0">
+      <span>x</span>
+      <input type="number" id="new-ex-reps" placeholder="12" min="0">
+    </div>
     <input type="number" id="new-ex-weight" placeholder="kg" step="0.5" min="0">
     <div style="width: 100%; display: flex; gap: 8px; margin-top: 4px;">
       <button class="btn-cancel" type="button" style="padding: 8px 16px;">✕</button>
@@ -716,6 +796,7 @@ function renderAddExerciseForm(cat){
     </div>
   `;
   const nameInput = form.querySelector('#new-ex-name');
+  const setsInput = form.querySelector('#new-ex-sets');
   const repsInput = form.querySelector('#new-ex-reps');
   const weightInput = form.querySelector('#new-ex-weight');
   const okBtn = form.querySelector('.btn-ok');
@@ -724,10 +805,12 @@ function renderAddExerciseForm(cat){
   function confirmAdd(){
     const name = nameInput.value.trim();
     if(!name){ addingExerciseFor = null; render(); return; }
-    const weight = parseFloat(weightInput.value) || 0;
-    const reps = repsInput.value.trim();
     
-    cat.exercises.push({ id: uid(), name, weight, reps, checked: false, upWeight: false });
+    const sets = parseInt(setsInput.value) || '';
+    const repsCount = parseInt(repsInput.value) || '';
+    const weight = parseFloat(weightInput.value) || 0;
+    
+    cat.exercises.push({ id: uid(), name, weight, sets, repsCount, checked: false, upWeight: false });
     addingExerciseFor = null;
     saveState();
     render();
@@ -736,8 +819,9 @@ function renderAddExerciseForm(cat){
   okBtn.onclick = confirmAdd;
   cancelBtn.onclick = () => { addingExerciseFor = null; render(); };
   nameInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); confirmAdd(); } });
-  weightInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); confirmAdd(); } });
+  setsInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); confirmAdd(); } });
   repsInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); confirmAdd(); } });
+  weightInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); confirmAdd(); } });
 
   setTimeout(() => nameInput.focus(), 0);
   return form;
@@ -792,7 +876,6 @@ document.getElementById('file-import').addEventListener('change', function(event
     }
   };
   reader.readAsText(file);
-  // Limpiar el input para permitir importar el mismo archivo varias veces si se desea
   event.target.value = '';
 });
 
