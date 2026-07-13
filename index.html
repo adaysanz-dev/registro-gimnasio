@@ -31,11 +31,8 @@
   *{box-sizing:border-box;}
   html,body{height:100%;}
   body{
-    margin:0;
-    background:var(--bg);
-    color:var(--text);
-    font-family:'Inter',sans-serif;
-    -webkit-tap-highlight-color:transparent;
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:'Inter',sans-serif; -webkit-tap-highlight-color:transparent;
     overscroll-behavior-y:contain;
   }
   
@@ -44,90 +41,53 @@
   input[type=number] { -moz-appearance: textfield; }
 
   #app{
-    max-width:520px;
-    margin:0 auto;
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    padding-bottom:80px; /* Espacio extra para el timer flotante */
+    max-width:520px; margin:0 auto; min-height:100vh;
+    display:flex; flex-direction:column; padding-bottom:80px;
     padding-top:env(safe-area-inset-top);
   }
-  header{
-    padding:22px 18px 14px;
-    display:flex;
-    flex-direction: column;
-    gap:12px;
-  }
-  .header-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+  header{ padding:22px 18px 14px; display:flex; flex-direction: column; gap:12px; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; }
   .header-title { display:flex; align-items:center; gap:10px; }
   header svg{ flex-shrink:0; }
   header h1{
-    font-family:'Oswald',sans-serif;
-    font-weight:700; font-size:22px; letter-spacing:0.04em;
-    text-transform:uppercase; margin:0;
+    font-family:'Oswald',sans-serif; font-weight:700; font-size:22px;
+    letter-spacing:0.04em; text-transform:uppercase; margin:0;
   }
   .btn-action {
-    background: var(--surface-2); color: var(--accent);
-    border: 1px solid var(--border); border-radius: 8px;
-    padding: 8px 12px; font-family: 'Oswald', sans-serif;
-    font-size: 12px; font-weight: 600; letter-spacing: 0.05em;
-    text-transform: uppercase; cursor: pointer; transition: background .15s;
+    background: var(--surface-2); color: var(--accent); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 12px; font-family: 'Oswald', sans-serif;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer;
   }
-  .btn-action:hover { background: var(--border); }
   .btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
   
-  /* Tracker de la semana */
+  /* Tracker Semanal */
   .week-tracker { display: flex; justify-content: space-between; gap: 4px; }
-  .day-dot {
-    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
-  }
+  .day-dot { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .day-label { font-size: 10px; color: var(--text-muted); font-weight: 600; transition: all .2s; }
   .day-circle {
-    width: 24px; height: 24px; border-radius: 50%;
-    background: var(--surface-2); border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 50%; background: var(--surface-2);
+    border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
     font-size: 10px; color: transparent; transition: all .2s;
   }
-  
-  /* ESTILOS PARA DESTACAR EL DÍA ACTUAL */
-  .day-dot.active .day-label { 
-    color: var(--accent); 
-    font-weight: 700; 
-    font-size: 11px;
-  }
-  .day-dot.active .day-circle {
-    border-color: var(--accent);
-    box-shadow: 0 0 8px rgba(255, 106, 57, 0.4);
-  }
-  
-  .day-dot.completed .day-circle {
-    background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: bold; box-shadow: none;
-  }
+  .day-dot.active .day-label { color: var(--accent); font-weight: 700; font-size: 11px; }
+  .day-dot.active .day-circle { border-color: var(--accent); box-shadow: 0 0 8px rgba(255, 106, 57, 0.4); }
+  .day-dot.completed .day-circle { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: bold; box-shadow: none; }
 
-  /* Planificación del día */
+  /* Planificación */
   .today-plan {
     display: flex; justify-content: space-between; align-items: center;
-    background: var(--surface); padding: 10px 14px; border-radius: var(--radius);
-    border: 1px dashed var(--border);
+    background: var(--surface); padding: 10px 14px; border-radius: var(--radius); border: 1px dashed var(--border);
   }
   .today-plan-text { font-size: 13px; color: var(--text); }
   .today-plan-text strong { color: var(--accent); }
 
-  .tabs{
-    display:flex; gap:6px; overflow-x:auto;
-    padding:4px 18px 12px; scrollbar-width:none;
-  }
+  /* Tabs */
+  .tabs{ display:flex; gap:6px; overflow-x:auto; padding:4px 18px 12px; scrollbar-width:none; }
   .tabs::-webkit-scrollbar{display:none;}
   .tab{
-    flex-shrink:0; display: flex; align-items: center; gap: 8px;
-    font-family:'Oswald',sans-serif; font-weight:600; font-size:13px;
-    letter-spacing:0.05em; text-transform:uppercase; color:var(--text-muted);
-    background:var(--surface); border:1px solid var(--border);
-    padding:9px 16px; border-radius:999px; cursor:pointer;
+    flex-shrink:0; display: flex; align-items: center; gap: 8px; font-family:'Oswald',sans-serif;
+    font-weight:600; font-size:13px; letter-spacing:0.05em; text-transform:uppercase; color:var(--text-muted);
+    background:var(--surface); border:1px solid var(--border); padding:9px 16px; border-radius:999px; cursor:pointer;
   }
   .tab.active{ color:var(--bg); background:var(--accent); border-color:var(--accent); }
   .tab.add-tab{ color:var(--accent); background:transparent; border:1px dashed var(--border); font-size:16px; justify-content: center; }
@@ -136,20 +96,18 @@
   main{ flex:1; padding:6px 18px 0; }
   .empty{ text-align:center; color:var(--text-muted); font-size:14px; padding:60px 20px; line-height:1.6; }
   
+  /* Fila Ejercicio */
   .row{
-    display:flex; flex-wrap: wrap; gap:6px; align-items: center;
-    background:var(--surface); border:1px solid var(--border);
-    border-radius:var(--radius); padding:10px 8px; margin-bottom:8px;
+    display:flex; flex-wrap: wrap; gap:6px; align-items: center; background:var(--surface);
+    border:1px solid var(--border); border-radius:var(--radius); padding:10px 8px; margin-bottom:8px;
   }
   .row.checked{ border-color:var(--good); background:linear-gradient(0deg, rgba(87,199,133,.08), rgba(87,199,133,.08)), var(--surface); }
-  
   .row-top { display: flex; width: 100%; align-items: center; gap: 6px; }
-  .row-bottom { display: flex; width: 100%; padding-left: 30px; } /* Indentado al nivel del texto */
+  .row-bottom { display: flex; width: 100%; padding-left: 30px; }
 
   .check{
-    width:24px; height:24px; border-radius:50%; border:2px solid var(--text-muted);
-    flex-shrink:0; display:flex; align-items:center; justify-content:center;
-    color:transparent; font-size:14px; cursor:pointer;
+    width:24px; height:24px; border-radius:50%; border:2px solid var(--text-muted); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; color:transparent; font-size:14px; cursor:pointer;
   }
   .row.checked .check{ border-color:var(--good); background:var(--good); color:var(--bg); }
   
@@ -159,24 +117,29 @@
   }
   .row.checked .ex-name{ color:var(--text-muted); text-decoration:line-through; text-decoration-color:var(--good); }
   
+  .btn-history {
+    background: transparent; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; padding: 0 4px;
+  }
+  .btn-history:hover { color: var(--accent); }
+
   .sets-reps-wrap {
-    display:flex; align-items:center; gap:2px; background:var(--surface-2);
-    border-radius:6px; padding:5px 4px; flex-shrink:0; color: var(--text-muted);
-    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    display:flex; align-items:center; gap:2px; background:var(--surface-2); border-radius:6px;
+    padding:5px 4px; flex-shrink:0; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; font-size: 11px;
   }
   .sets-reps-input {
-    width:24px; background:transparent; border:none; color:var(--text);
-    font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600;
-    text-align:center; outline:none; padding: 0;
+    width:24px; background:transparent; border:none; color:var(--text); font-family:'IBM Plex Mono',monospace;
+    font-size:13px; font-weight:600; text-align:center; outline:none; padding: 0;
   }
   
+  /* Resaltado de Peso */
   .weight-wrap{
-    display:flex; align-items:baseline; gap:2px; background:var(--surface-2);
-    border-radius:6px; padding:5px 6px; flex-shrink:0;
+    display:flex; align-items:baseline; gap:2px; background:var(--surface-2); border-radius:6px; padding:5px 6px; flex-shrink:0; border: 1px solid transparent; transition: all 0.3s;
+  }
+  .weight-wrap.highlight {
+    border-color: var(--accent); box-shadow: 0 0 8px rgba(255, 106, 57, 0.4);
   }
   .weight-input{
-    width:50px; background:transparent; border:none; color:var(--text);
-    font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; text-align:right; outline:none;
+    width:50px; background:transparent; border:none; color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; text-align:right; outline:none;
   }
   .weight-unit{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-muted); }
   
@@ -193,28 +156,25 @@
   .order-btn { background: transparent; border: none; color: var(--text-muted); font-size: 10px; cursor: pointer; padding: 0 2px; }
   .del{ background:transparent; border:none; color:var(--text-muted); font-size:15px; cursor:pointer; flex-shrink:0; }
   
-  /* Notas */
   .notes-input {
     width: 100%; background: transparent; border: none; border-bottom: 1px dashed var(--border);
-    color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 12px;
-    padding: 4px 0; outline: none; transition: color .2s, border-color .2s;
+    color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 12px; padding: 4px 0; outline: none;
   }
   .notes-input:focus { color: var(--text); border-color: var(--accent); }
 
   .add-ex-btn{
     width:100%; background:transparent; border:1px dashed var(--border); color:var(--accent);
     border-radius:var(--radius); padding:12px; font-family:'Oswald',sans-serif;
-    font-weight:600; letter-spacing:0.04em; text-transform:uppercase; font-size:13px;
-    cursor:pointer; margin-top:4px; margin-bottom:8px;
+    font-weight:600; letter-spacing:0.04em; text-transform:uppercase; font-size:13px; cursor:pointer; margin:4px 0 8px;
   }
 
   .io-section { display: flex; justify-content: center; gap: 12px; padding: 10px 20px; margin-top: 20px; }
   .footer-note{ text-align:center; color:var(--text-muted); font-size:11px; padding:0 20px 20px; }
   
-  /* Modal Planificador */
+  /* Modales */
   .modal-overlay {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 100;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8);
+    display: none; align-items: center; justify-content: center; z-index: 100;
   }
   .modal-overlay.active { display: flex; }
   .modal-content {
@@ -223,19 +183,24 @@
   }
   .modal-title { font-family: 'Oswald', sans-serif; text-transform: uppercase; margin: 0 0 16px 0; color: var(--accent); }
   .modal-day-select {
-    width: 100%; padding: 10px; background: var(--surface); color: var(--text);
-    border: 1px solid var(--border); border-radius: 6px; margin-bottom: 16px; outline: none;
+    width: 100%; padding: 10px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 16px; outline: none;
   }
   .modal-cat-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
   .modal-cat-item { display: flex; align-items: center; gap: 10px; font-size: 14px; }
   .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
 
-  /* Temporizador Flotante */
+  /* Historial List Items */
+  .log-item {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--surface-2); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border); font-size: 13px;
+  }
+  .log-date { color: var(--text-muted); font-size: 11px; }
+  .log-data { font-family: 'IBM Plex Mono', monospace; color: var(--text); font-weight: 600; }
+
+  /* Timer */
   .fab-timer {
-    position: fixed; bottom: 20px; right: 20px; background: var(--surface);
-    border: 2px solid var(--accent); border-radius: 50px; padding: 8px 16px;
-    display: flex; align-items: center; gap: 10px; z-index: 50; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    transition: all 0.3s;
+    position: fixed; bottom: 20px; right: 20px; background: var(--surface); border: 2px solid var(--accent);
+    border-radius: 50px; padding: 8px 16px; display: flex; align-items: center; gap: 10px; z-index: 50; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
   }
   .fab-timer.active { background: var(--accent); color: var(--bg); }
   .fab-display { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 16px; cursor: pointer; }
@@ -245,12 +210,9 @@
   }
   .fab-timer:hover .fab-menu, .fab-menu.show { display: flex; }
   .fab-btn {
-    background: var(--surface-2); border: none; color: var(--text); padding: 8px 16px;
-    border-radius: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; cursor: pointer;
+    background: var(--surface-2); border: none; color: var(--text); padding: 8px 16px; border-radius: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; cursor: pointer;
   }
   .fab-btn:hover { background: var(--accent); color: var(--bg); }
-
-  /* Animación destello timer */
   @keyframes flash { 0%, 100% { background: var(--surface); } 50% { background: var(--accent); color: var(--bg); } }
   .timer-done { animation: flash 1s infinite; }
 </style>
@@ -273,10 +235,7 @@
       </div>
       <button id="btn-save-session" class="btn-action btn-primary">Guardar Sesión</button>
     </div>
-    
-    <div class="week-tracker" id="week-tracker">
-      </div>
-
+    <div class="week-tracker" id="week-tracker"></div>
     <div class="today-plan">
       <div class="today-plan-text" id="today-text">Cargando...</div>
       <button class="btn-action" onclick="openPlanner()">Planificar</button>
@@ -309,6 +268,17 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="history-modal">
+  <div class="modal-content">
+    <h2 class="modal-title" id="history-title">Historial</h2>
+    <div id="history-chart"></div>
+    <div id="history-list" style="display:flex; flex-direction:column; gap:8px; margin-top:10px; max-height: 250px; overflow-y: auto;"></div>
+    <div class="modal-actions" style="margin-top: 15px;">
+      <button class="btn-action" onclick="closeHistory()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <div class="fab-timer" id="fab-timer">
   <div class="fab-menu" id="fab-menu">
     <button class="fab-btn" onclick="startTimer(60)">60s</button>
@@ -322,13 +292,10 @@
 <script>
 const STORAGE_KEY = 'gymlog-data';
 const DEFAULT_CATEGORIES = ['Pierna','Espalda','Pecho','Hombro','Brazo','Cardio'];
-const DAY_NAMES = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 
 let state = null;
 let activeCategory = null;
 let addingCategory = false;
-
-// Variables Timer
 let timerInterval;
 let timeRemaining = 0;
 
@@ -338,7 +305,8 @@ function defaultState(){
   return {
     categories: DEFAULT_CATEGORIES.map(name => ({ id: uid(), name, exercises: [] })),
     history: {}, 
-    routine: { 0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[] } 
+    routine: { 0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[] },
+    logs: [] // <-- NUEVO: Aquí guardaremos la memoria de pesos
   };
 }
 
@@ -346,24 +314,16 @@ function loadState(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
     state = raw ? JSON.parse(raw) : defaultState();
-    
     if(!state.history) state.history = {};
     if(!state.routine) state.routine = { 0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[] };
+    if(!state.logs) state.logs = []; // Inicializamos logs si es una versión antigua
     
-    // --- SCRIPT DE MIGRACIÓN: Forzar la aparición de Cardio ---
     let hasCardio = false;
     state.categories.forEach(c => {
-      if (c.name.toLowerCase() === 'core') {
-        c.name = 'Cardio'; // Renombramos Core a Cardio si existe
-        hasCardio = true;
-      } else if (c.name.toLowerCase() === 'cardio') {
-        hasCardio = true;
-      }
+      if (c.name.toLowerCase() === 'core') { c.name = 'Cardio'; hasCardio = true; } 
+      else if (c.name.toLowerCase() === 'cardio') { hasCardio = true; }
     });
-    // Si el usuario no tenía ni Core ni Cardio, le añadimos Cardio al final
-    if (!hasCardio) {
-       state.categories.push({ id: uid(), name: 'Cardio', exercises: [] });
-    }
+    if (!hasCardio) state.categories.push({ id: uid(), name: 'Cardio', exercises: [] });
     
   }catch(e){ state = defaultState(); }
   activeCategory = state.categories[0] ? state.categories[0].id : null;
@@ -423,8 +383,7 @@ function renderHeader(){
     todayPlanText.innerHTML = "Hoy: <strong>Descanso (o sin asignar)</strong>";
   } else {
     const names = todayCatIds.map(id => {
-      const c = getCategory(id);
-      return c ? c.name : '';
+      const c = getCategory(id); return c ? c.name : '';
     }).filter(n => n);
     todayPlanText.innerHTML = `Hoy toca: <strong>${names.join(', ')}</strong>`;
   }
@@ -436,15 +395,10 @@ function renderTabs(){
   state.categories.forEach(cat => {
     const btn = document.createElement('div');
     btn.className = 'tab' + (cat.id === activeCategory ? ' active' : '');
-    
-    const nameSpan = document.createElement('span');
-    nameSpan.textContent = cat.name;
-    btn.appendChild(nameSpan);
+    const nameSpan = document.createElement('span'); nameSpan.textContent = cat.name; btn.appendChild(nameSpan);
 
     if(cat.id === activeCategory) {
-      const delCatBtn = document.createElement('div');
-      delCatBtn.className = 'tab-del';
-      delCatBtn.textContent = '✕';
+      const delCatBtn = document.createElement('div'); delCatBtn.className = 'tab-del'; delCatBtn.textContent = '✕';
       delCatBtn.onclick = (e) => {
         e.stopPropagation();
         if(confirm(`¿Eliminar grupo "${cat.name}"?`)){
@@ -461,20 +415,15 @@ function renderTabs(){
   });
 
   if(addingCategory){
-    const form = document.createElement('form');
-    form.style.display = 'flex'; form.style.gap = '6px';
+    const form = document.createElement('form'); form.style.display = 'flex'; form.style.gap = '6px';
     form.innerHTML = `<input type="text" id="new-cat-input" placeholder="Nombre" maxlength="20" style="width:100px;background:var(--surface-2);border:1px solid var(--accent);border-radius:8px;padding:8px;color:var(--text);font-size:13px;outline:none;">`;
     tabs.appendChild(form);
     const input = form.querySelector('#new-cat-input');
     setTimeout(() => input.focus(), 0);
-    input.addEventListener('keydown', e => {
-      if(e.key === 'Enter'){ e.preventDefault(); confirmAddCategory(input.value); }
-      if(e.key === 'Escape'){ addingCategory = false; render(); }
-    });
+    input.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); confirmAddCategory(input.value); } if(e.key === 'Escape'){ addingCategory = false; render(); }});
     input.addEventListener('blur', () => confirmAddCategory(input.value));
   } else {
-    const addBtn = document.createElement('div');
-    addBtn.className = 'tab add-tab'; addBtn.textContent = '+';
+    const addBtn = document.createElement('div'); addBtn.className = 'tab add-tab'; addBtn.textContent = '+';
     addBtn.onclick = () => { addingCategory = true; render(); };
     tabs.appendChild(addBtn);
   }
@@ -484,27 +433,21 @@ function confirmAddCategory(name){
   addingCategory = false;
   const trimmed = (name || '').trim();
   if(trimmed){
-    const cat = { id: uid(), name: trimmed, exercises: [] };
-    state.categories.push(cat);
-    activeCategory = cat.id;
+    state.categories.push({ id: uid(), name: trimmed, exercises: [] });
+    activeCategory = state.categories[state.categories.length-1].id;
     saveState();
   }
   render();
 }
 
 function renderMain(){
-  const main = document.getElementById('main');
-  main.innerHTML = '';
+  const main = document.getElementById('main'); main.innerHTML = '';
   const cat = getCategory(activeCategory);
-  if(!cat){
-    main.innerHTML = '<div class="empty">Crea un grupo muscular con el botón +</div>'; return;
-  }
+  if(!cat){ main.innerHTML = '<div class="empty">Crea un grupo muscular con el botón +</div>'; return; }
 
   cat.exercises.forEach((ex, index) => main.appendChild(renderExerciseRow(cat, ex, index)));
 
-  const addBtn = document.createElement('button');
-  addBtn.className = 'add-ex-btn';
-  addBtn.textContent = '+ Añadir ejercicio';
+  const addBtn = document.createElement('button'); addBtn.className = 'add-ex-btn'; addBtn.textContent = '+ Añadir ejercicio';
   addBtn.onclick = () => {
     cat.exercises.push({ id: uid(), name: '', weight: 0, sets: '', repsCount: '', checked: false, upWeight: false, notes: '' });
     saveState(); render();
@@ -516,23 +459,23 @@ function renderExerciseRow(cat, ex, index){
   const row = document.createElement('div');
   row.className = 'row' + (ex.checked ? ' checked' : '');
 
-  // Fila Superior
-  const topRow = document.createElement('div');
-  topRow.className = 'row-top';
+  const topRow = document.createElement('div'); topRow.className = 'row-top';
 
-  const check = document.createElement('div');
-  check.className = 'check'; check.textContent = '✓';
+  const check = document.createElement('div'); check.className = 'check'; check.textContent = '✓';
   check.onclick = () => { ex.checked = !ex.checked; saveState(); render(); };
   topRow.appendChild(check);
 
-  const nameInput = document.createElement('input');
-  nameInput.className = 'ex-name'; nameInput.type = 'text';
+  const nameInput = document.createElement('input'); nameInput.className = 'ex-name'; nameInput.type = 'text';
   nameInput.placeholder = 'Nombre ejercicio...'; nameInput.value = ex.name;
   nameInput.addEventListener('change', () => { ex.name = nameInput.value.trim(); saveState(); });
   topRow.appendChild(nameInput);
 
-  const setsRepsWrap = document.createElement('div');
-  setsRepsWrap.className = 'sets-reps-wrap';
+  // NUEVO: Botón Historial
+  const histBtn = document.createElement('button'); histBtn.className = 'btn-history'; histBtn.innerHTML = '📈';
+  histBtn.onclick = () => openHistory(ex);
+  topRow.appendChild(histBtn);
+
+  const setsRepsWrap = document.createElement('div'); setsRepsWrap.className = 'sets-reps-wrap';
   const setsIn = document.createElement('input'); setsIn.className = 'sets-reps-input'; setsIn.type = 'number'; setsIn.placeholder = '3'; setsIn.value = ex.sets;
   setsIn.addEventListener('change', () => { ex.sets = parseInt(setsIn.value) || ''; saveState(); });
   const sep = document.createElement('span'); sep.textContent = 'x';
@@ -541,22 +484,22 @@ function renderExerciseRow(cat, ex, index){
   setsRepsWrap.append(setsIn, sep, repsIn);
   topRow.appendChild(setsRepsWrap);
 
+  // NUEVO: Resaltado de la caja si toca subir peso
   const weightWrap = document.createElement('div');
-  weightWrap.className = 'weight-wrap';
+  weightWrap.className = 'weight-wrap' + (ex.upWeight ? ' highlight' : ''); 
+  
   const weightIn = document.createElement('input'); weightIn.className = 'weight-input'; weightIn.type = 'number'; weightIn.step = '0.5'; weightIn.value = ex.weight;
   weightIn.addEventListener('change', () => { ex.weight = parseFloat(weightIn.value) || 0; saveState(); });
   const unit = document.createElement('span'); unit.className = 'weight-unit'; unit.textContent = 'kg';
   weightWrap.append(weightIn, unit);
   topRow.appendChild(weightWrap);
 
-  const upWeight = document.createElement('div');
-  upWeight.className = 'up-weight-check' + (ex.upWeight ? ' active' : '');
+  const upWeight = document.createElement('div'); upWeight.className = 'up-weight-check' + (ex.upWeight ? ' active' : '');
   upWeight.innerHTML = `<div class="up-weight-box">↑</div><span class="up-weight-label">Subir</span>`;
   upWeight.onclick = () => { ex.upWeight = !ex.upWeight; saveState(); render(); };
   topRow.appendChild(upWeight);
 
-  const orderBtns = document.createElement('div');
-  orderBtns.className = 'order-btns';
+  const orderBtns = document.createElement('div'); orderBtns.className = 'order-btns';
   const btnUp = document.createElement('button'); btnUp.className = 'order-btn'; btnUp.innerHTML = '▲'; btnUp.style.visibility = index === 0 ? 'hidden' : 'visible';
   btnUp.onclick = () => { const t = cat.exercises[index-1]; cat.exercises[index-1] = cat.exercises[index]; cat.exercises[index] = t; saveState(); render(); };
   const btnDown = document.createElement('button'); btnDown.className = 'order-btn'; btnDown.innerHTML = '▼'; btnDown.style.visibility = index === cat.exercises.length-1 ? 'hidden' : 'visible';
@@ -570,144 +513,151 @@ function renderExerciseRow(cat, ex, index){
 
   row.appendChild(topRow);
 
-  // Fila Inferior (Notas)
-  const bottomRow = document.createElement('div');
-  bottomRow.className = 'row-bottom';
-  const notes = document.createElement('input');
-  notes.className = 'notes-input'; notes.type = 'text';
-  notes.placeholder = 'Notas (posición, altura asiento, sensaciones)...';
-  notes.value = ex.notes || '';
+  const bottomRow = document.createElement('div'); bottomRow.className = 'row-bottom';
+  const notes = document.createElement('input'); notes.className = 'notes-input'; notes.type = 'text'; notes.placeholder = 'Notas...'; notes.value = ex.notes || '';
   notes.addEventListener('change', () => { ex.notes = notes.value; saveState(); });
   bottomRow.appendChild(notes);
-  
   row.appendChild(bottomRow);
 
   return row;
 }
 
-// === Lógica Historial / Guardar Sesión ===
+// === LÓGICA DE HISTORIAL Y GRÁFICOS ===
+function openHistory(ex) {
+  const modal = document.getElementById('history-modal');
+  document.getElementById('history-title').textContent = ex.name || 'Sin nombre';
+  
+  const chartContainer = document.getElementById('history-chart');
+  const listContainer = document.getElementById('history-list');
+  
+  // Extraer los logs de este ejercicio específico y ordenarlos por fecha
+  const logs = state.logs.filter(l => l.id === ex.id).sort((a,b) => a.date.localeCompare(b.date));
+  
+  if(logs.length === 0) {
+    chartContainer.innerHTML = '';
+    listContainer.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:13px; padding:20px;">Aún no has guardado sesiones para este ejercicio.</div>';
+  } else {
+    // Dibujar gráfico SVG simple
+    if (logs.length > 1) {
+      const width = 300, height = 120, pad = 20;
+      const weights = logs.map(l => l.weight);
+      const minW = Math.min(...weights);
+      const maxW = Math.max(...weights);
+      const range = maxW - minW === 0 ? 1 : maxW - minW;
+      
+      const pts = logs.map((l, i) => {
+        const x = pad + (i / (logs.length - 1)) * (width - pad * 2);
+        const y = height - pad - ((l.weight - minW) / range) * (height - pad * 2);
+        return `${x},${y}`;
+      }).join(' ');
+
+      const circles = logs.map((l, i) => {
+        const x = pad + (i / (logs.length - 1)) * (width - pad * 2);
+        const y = height - pad - ((l.weight - minW) / range) * (height - pad * 2);
+        return `<circle cx="${x}" cy="${y}" r="4" fill="var(--bg)" stroke="var(--accent)" stroke-width="2"/>
+                <text x="${x}" y="${y - 12}" fill="var(--text-muted)" font-size="9" text-anchor="middle" font-family="monospace">${l.weight}</text>`;
+      }).join('');
+
+      chartContainer.innerHTML = `
+        <svg viewBox="0 0 ${width} ${height}" style="width:100%; height:120px; background:var(--surface-2); border-radius:8px; margin-bottom:15px; display:block;">
+          <polyline fill="none" stroke="var(--accent)" stroke-width="2" points="${pts}" />
+          ${circles}
+        </svg>
+      `;
+    } else {
+      chartContainer.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding-bottom:15px;">Registra otra sesión para ver el gráfico.</div>';
+    }
+
+    // Dibujar lista invertida (más reciente arriba)
+    listContainer.innerHTML = [...logs].reverse().map(l => `
+      <div class="log-item">
+        <span class="log-date">${l.date}</span>
+        <span class="log-data">${l.sets}x${l.repsCount} &mdash; <span style="color:var(--accent);">${l.weight} kg</span></span>
+      </div>
+    `).join('');
+  }
+  
+  modal.classList.add('active');
+}
+
+function closeHistory() {
+  document.getElementById('history-modal').classList.remove('active');
+}
+
+// === Lógica Guardar Sesión Actualizada ===
 document.getElementById('btn-save-session').addEventListener('click', () => {
   let hasChecked = false;
-  state.categories.forEach(cat => {
-    cat.exercises.forEach(ex => { if(ex.checked) hasChecked = true; });
-  });
+  state.categories.forEach(cat => { cat.exercises.forEach(ex => { if(ex.checked) hasChecked = true; }); });
 
-  if(!hasChecked) {
-    alert("No has marcado ningún ejercicio completado aún.");
-    return;
-  }
+  if(!hasChecked) { alert("No has marcado ningún ejercicio completado aún."); return; }
 
-  if (confirm('¿Terminar entrenamiento? Se guardará el día y se reiniciarán los checks.')) {
+  if (confirm('¿Terminar entrenamiento? Se guardarán los pesos en tu historial.')) {
     const todayStr = getLocalDateStr(new Date());
     state.history[todayStr] = true;
     
     state.categories.forEach(cat => {
-      cat.exercises.forEach(ex => ex.checked = false);
+      cat.exercises.forEach(ex => {
+        if(ex.checked) {
+          // Guardamos la fotografía exacta en la memoria
+          state.logs.push({
+            id: ex.id,
+            date: todayStr,
+            weight: ex.weight,
+            sets: ex.sets,
+            repsCount: ex.repsCount
+          });
+          // Desmarcamos el check para el próximo día, PERO dejamos la caja de "Subir" como estuviera.
+          ex.checked = false;
+        }
+      });
     });
     
-    saveState();
-    render();
+    saveState(); render();
   }
 });
 
-// === Lógica Planificador Modal ===
-const modal = document.getElementById('planner-modal');
+// Modal Planificador...
+const plannerModal = document.getElementById('planner-modal');
 const daySelect = document.getElementById('planner-day');
 const catList = document.getElementById('planner-cats');
-
-function openPlanner(){
-  daySelect.value = new Date().getDay().toString();
-  renderPlannerCats();
-  modal.classList.add('active');
-}
-function closePlanner(){
-  modal.classList.remove('active');
-  render(); 
-}
+function openPlanner(){ daySelect.value = new Date().getDay().toString(); renderPlannerCats(); plannerModal.classList.add('active'); }
+function closePlanner(){ plannerModal.classList.remove('active'); render(); }
 daySelect.addEventListener('change', renderPlannerCats);
-
 function renderPlannerCats(){
-  catList.innerHTML = '';
-  const day = daySelect.value;
-  const assigned = state.routine[day] || [];
-  
-  if(state.categories.length === 0){
-    catList.innerHTML = '<span style="color:var(--text-muted);font-size:13px;">Crea primero grupos musculares.</span>';
-    return;
-  }
-
+  catList.innerHTML = ''; const day = daySelect.value; const assigned = state.routine[day] || [];
+  if(state.categories.length === 0){ catList.innerHTML = '<span style="color:var(--text-muted);font-size:13px;">Crea primero grupos musculares.</span>'; return; }
   state.categories.forEach(cat => {
-    const label = document.createElement('label');
-    label.className = 'modal-cat-item';
-    const cb = document.createElement('input');
-    cb.type = 'checkbox';
-    cb.checked = assigned.includes(cat.id);
+    const label = document.createElement('label'); label.className = 'modal-cat-item';
+    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = assigned.includes(cat.id);
     cb.addEventListener('change', (e) => {
-      if(e.target.checked){
-        if(!state.routine[day].includes(cat.id)) state.routine[day].push(cat.id);
-      } else {
-        state.routine[day] = state.routine[day].filter(id => id !== cat.id);
-      }
+      if(e.target.checked){ if(!state.routine[day].includes(cat.id)) state.routine[day].push(cat.id); }
+      else { state.routine[day] = state.routine[day].filter(id => id !== cat.id); }
       saveState();
     });
-    label.appendChild(cb);
-    label.appendChild(document.createTextNode(cat.name));
-    catList.appendChild(label);
+    label.append(cb, document.createTextNode(cat.name)); catList.appendChild(label);
   });
 }
 
-// === Lógica Temporizador ===
-const timerFab = document.getElementById('fab-timer');
-const timerDisplay = document.getElementById('timer-display');
-const timerMenu = document.getElementById('fab-menu');
-
-function toggleTimerMenu(){
-  timerMenu.classList.toggle('show');
-}
-function formatTime(sec){
-  const m = Math.floor(sec / 60).toString().padStart(2, '0');
-  const s = (sec % 60).toString().padStart(2, '0');
-  return `${m}:${s}`;
-}
+// Timer
+const timerFab = document.getElementById('fab-timer'); const timerDisplay = document.getElementById('timer-display'); const timerMenu = document.getElementById('fab-menu');
+function toggleTimerMenu(){ timerMenu.classList.toggle('show'); }
+function formatTime(sec){ const m = Math.floor(sec / 60).toString().padStart(2, '0'); const s = (sec % 60).toString().padStart(2, '0'); return `${m}:${s}`; }
 function startTimer(seconds){
-  timerMenu.classList.remove('show');
-  timerFab.classList.remove('timer-done');
-  timerFab.classList.add('active');
-  clearInterval(timerInterval);
-  timeRemaining = seconds;
-  timerDisplay.textContent = `⏱️ ${formatTime(timeRemaining)}`;
-  
+  timerMenu.classList.remove('show'); timerFab.classList.remove('timer-done'); timerFab.classList.add('active');
+  clearInterval(timerInterval); timeRemaining = seconds; timerDisplay.textContent = `⏱️ ${formatTime(timeRemaining)}`;
   timerInterval = setInterval(() => {
     timeRemaining--;
-    if(timeRemaining <= 0){
-      clearInterval(timerInterval);
-      timerDisplay.textContent = "¡TIEMPO!";
-      timerFab.classList.add('timer-done');
-      if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
-    } else {
-      timerDisplay.textContent = `⏱️ ${formatTime(timeRemaining)}`;
-    }
+    if(timeRemaining <= 0){ clearInterval(timerInterval); timerDisplay.textContent = "¡TIEMPO!"; timerFab.classList.add('timer-done'); if(navigator.vibrate) navigator.vibrate([200, 100, 200]); }
+    else { timerDisplay.textContent = `⏱️ ${formatTime(timeRemaining)}`; }
   }, 1000);
 }
-function stopTimer(){
-  timerMenu.classList.remove('show');
-  clearInterval(timerInterval);
-  timerFab.classList.remove('active', 'timer-done');
-  timerDisplay.textContent = "⏱️ 00:00";
-}
-
-document.addEventListener('click', (e) => {
-  if(!timerFab.contains(e.target)){
-    timerMenu.classList.remove('show');
-  }
-});
+function stopTimer(){ timerMenu.classList.remove('show'); clearInterval(timerInterval); timerFab.classList.remove('active', 'timer-done'); timerDisplay.textContent = "⏱️ 00:00"; }
+document.addEventListener('click', (e) => { if(!timerFab.contains(e.target)) timerMenu.classList.remove('show'); });
 
 // Import/Export
 document.getElementById('btn-export').addEventListener('click', () => {
   const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
-  const a = document.createElement('a'); a.href = dataStr;
-  a.download = `gimnasio_${getLocalDateStr(new Date())}.json`;
-  document.body.appendChild(a); a.click(); a.remove();
+  const a = document.createElement('a'); a.href = dataStr; a.download = `gimnasio_${getLocalDateStr(new Date())}.json`; document.body.appendChild(a); a.click(); a.remove();
 });
 document.getElementById('file-import').addEventListener('change', function(e) {
   const file = e.target.files[0]; if (!file) return;
@@ -715,22 +665,15 @@ document.getElementById('file-import').addEventListener('change', function(e) {
   reader.onload = function(evt) {
     try {
       const imported = JSON.parse(evt.target.result);
-      if (imported && imported.categories) {
-        state = imported; saveState(); loadState();
-        alert('Datos importados.');
-      } else alert('Formato incorrecto.');
+      if (imported && imported.categories) { state = imported; saveState(); loadState(); alert('Datos importados.'); }
+      else alert('Formato incorrecto.');
     } catch (err) { alert('Error al leer el archivo.'); }
   };
   reader.readAsText(file); e.target.value = '';
 });
 
 loadState();
-
-if('serviceWorker' in navigator){
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('service-worker.js').catch(err => console.error(err));
-  });
-}
+if('serviceWorker' in navigator){ window.addEventListener('load', () => { navigator.serviceWorker.register('service-worker.js').catch(err => console.error(err)); }); }
 </script>
 </body>
 </html>
