@@ -134,12 +134,14 @@
     border:1px solid var(--border); border-radius:var(--radius); padding:10px 12px; margin-bottom:8px;
   }
   .row.checked{ border-color:var(--good); background:linear-gradient(0deg, rgba(87,199,133,.08), rgba(87,199,133,.08)), var(--surface); }
-  .row-top { display: flex; width: 100%; align-items: center; gap: 6px; }
+  .row-top { display: flex; width: 100%; align-items: center; gap: 10px; }
+  .row-stats { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .stat-col { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
   .row-bottom { display: flex; width: 100%; }
   
   .ex-name{
-    flex:1; font-size:14px; font-weight:500; background:transparent; border:none;
-    color:var(--text); font-family:'Inter',sans-serif; outline:none; min-width:50px;
+    flex:1; font-size:18px; font-weight:600; background:transparent; border:none;
+    color:var(--text); font-family:'Inter',sans-serif; outline:none; min-width:50px; padding:4px 0;
   }
   .ex-name:read-only { color: var(--text); }
   .row.checked .ex-name{ color:var(--text-muted); text-decoration:line-through; text-decoration-color:var(--good); }
@@ -204,6 +206,39 @@
   .io-section { display: flex; justify-content: center; gap: 12px; padding: 10px 20px; margin-top: 20px; }
   .footer-note{ text-align:center; color:var(--text-muted); font-size:11px; padding:0 20px 20px; margin-top: 20px; }
   
+  /* Historial de Sesiones */
+  .session-list { display: flex; flex-direction: column; gap: 10px; padding: 10px 18px 20px; }
+  .session-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 16px; cursor: pointer; transition: border-color .2s;
+  }
+  .session-card:hover { border-color: var(--accent); }
+  .session-card-date { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 14px; color: var(--text); }
+  .session-card-summary { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .session-detail-group-title {
+    font-family: 'Oswald', sans-serif; font-size: 12px; text-transform: uppercase; color: var(--accent);
+    font-weight: 600; letter-spacing: 0.04em; margin: 12px 0 6px;
+  }
+  .session-detail-group-title:first-child { margin-top: 0; }
+
+  /* Tabs: reordenar categorías */
+  .tab-order-btn { color: var(--bg); font-size: 13px; font-weight: 700; opacity: 0.8; padding: 0 1px; cursor: pointer; }
+
+  /* Aviso de deshacer */
+  .undo-toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(12px);
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 12px 14px 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6); z-index: 60;
+    width: 92%; max-width: 420px; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s;
+  }
+  .undo-toast.active { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+  .undo-toast-message { font-size: 13px; color: var(--text); }
+  .undo-toast-btn {
+    background: transparent; border: none; color: var(--accent); font-family: 'Oswald', sans-serif;
+    font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer; flex-shrink: 0;
+  }
+
   /* Modales */
   .modal-overlay {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8);
@@ -238,7 +273,26 @@
     width: 92%; max-width: 420px; transition: border-color 0.3s;
   }
   .timer-bar.active { border-color: var(--accent); }
-  .timer-presets { display: flex; gap: 4px; }
+  .timer-presets { display: flex; flex-direction: column; gap: 4px; }
+  .timer-presets-row { display: flex; gap: 4px; }
+  .timer-custom-toggle {
+    background: transparent; border: none; color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-decoration: underline;
+    cursor: pointer; padding: 2px 2px; text-align: left; max-width: 130px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .timer-custom-toggle.selected { color: var(--accent); font-weight: 600; text-decoration: none; }
+  .timer-custom-wrap { display: flex; align-items: center; gap: 4px; }
+  .timer-custom-input {
+    width: 46px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); font-family: 'IBM Plex Mono', monospace; font-size: 12px; text-align: center;
+    padding: 5px 2px; outline: none;
+  }
+  .timer-custom-input:focus { border-color: var(--accent); }
+  .timer-custom-set-btn {
+    background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted);
+    padding: 5px 8px; border-radius: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; cursor: pointer;
+  }
   .timer-btn {
     background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted);
     padding: 6px 10px; border-radius: 8px; font-family: 'IBM Plex Mono', monospace;
@@ -266,6 +320,8 @@
   
   <div id="home-view"></div>
   
+  <div id="sessions-view" style="display:none;"></div>
+  
   <div id="workspace-view" style="display:none; flex-direction:column; flex:1;">
     <nav class="tabs" id="tabs"></nav>
     <main id="main"></main>
@@ -277,7 +333,7 @@
     <input type="file" id="file-import" accept=".json" style="display: none;">
   </div>
   
-  <div class="footer-note">Los datos se guardan en el dispositivo.</div>
+
 </div>
 
 <div class="modal-overlay" id="planner-modal">
@@ -306,11 +362,47 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-content" style="max-width:340px;">
+    <h2 class="modal-title" id="confirm-title">Confirmar</h2>
+    <p id="confirm-message" style="color:var(--text); font-size:14px; line-height:1.5; margin:0 0 20px;"></p>
+    <div class="modal-actions">
+      <button class="btn-action" id="confirm-cancel-btn">Cancelar</button>
+      <button class="btn-action btn-primary" id="confirm-ok-btn">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="session-detail-modal">
+  <div class="modal-content">
+    <h2 class="modal-title" id="session-detail-title">Sesión</h2>
+    <div id="session-detail-list" style="display:flex; flex-direction:column; gap:2px; max-height:340px; overflow-y:auto;"></div>
+    <div class="modal-actions" style="margin-top: 15px;">
+      <button class="btn-action" onclick="closeSessionDetail()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="undo-toast" id="undo-toast">
+  <span class="undo-toast-message" id="undo-toast-message"></span>
+  <button class="undo-toast-btn" onclick="performUndo()">Deshacer</button>
+</div>
+
 <div class="timer-bar" id="timer-bar" style="display:none;">
   <div class="timer-presets">
-    <button class="timer-btn" id="tbtn-60" onclick="setTimer(60)">60s</button>
-    <button class="timer-btn" id="tbtn-90" onclick="setTimer(90)">90s</button>
-    <button class="timer-btn" id="tbtn-120" onclick="setTimer(120)">120s</button>
+    <div class="timer-presets-row">
+      <button class="timer-btn" id="tbtn-60" onclick="setTimer(60, false)">60s</button>
+      <button class="timer-btn" id="tbtn-90" onclick="setTimer(90, false)">90s</button>
+      <button class="timer-btn" id="tbtn-120" onclick="setTimer(120, false)">120s</button>
+    </div>
+    <div id="timer-custom-toggle-wrap">
+      <button class="timer-custom-toggle" id="timer-custom-toggle" onclick="toggleCustomTimerInput()">+ Personalizado</button>
+    </div>
+    <div class="timer-custom-wrap" id="timer-custom-wrap" style="display:none;">
+      <input type="number" id="timer-custom-input" class="timer-custom-input" min="1" max="5999" placeholder="seg" onkeydown="if(event.key==='Enter'){applyCustomTimer();} if(event.key==='Escape'){hideCustomTimerInput();}">
+      <button class="timer-custom-set-btn" onclick="applyCustomTimer()">Fijar</button>
+      <button class="timer-custom-set-btn" onclick="hideCustomTimerInput()">✕</button>
+    </div>
   </div>
   
   <div class="timer-display" id="timer-display">00:00</div>
@@ -342,6 +434,8 @@ let timerInterval;
 let timeRemaining = 0;
 let originalTime = 0;
 let isTimerRunning = false;
+let isCustomTimerSelected = false;
+let audioCtx = null;
 
 function uid(){ return Math.random().toString(36).slice(2,9); }
 
@@ -392,8 +486,54 @@ function getLocalDateStr(date) {
   return d.toISOString().split('T')[0];
 }
 
+// ==== CONFIRMACIÓN / AVISO PROPIOS (no usar confirm()/alert() nativos: no funcionan en PWA instalada) ====
+let confirmCallback = null;
+function showConfirm(message, onConfirm, options = {}) {
+  document.getElementById('confirm-title').textContent = options.title || 'Confirmar';
+  document.getElementById('confirm-message').textContent = message;
+  document.getElementById('confirm-ok-btn').textContent = options.okLabel || 'Eliminar';
+  document.getElementById('confirm-cancel-btn').style.display = options.hideCancel ? 'none' : 'inline-flex';
+  confirmCallback = onConfirm;
+  document.getElementById('confirm-modal').classList.add('active');
+}
+function closeConfirm() {
+  document.getElementById('confirm-modal').classList.remove('active');
+  confirmCallback = null;
+}
+function showAlert(message, options = {}) {
+  showConfirm(message, null, Object.assign({ title: 'Aviso', okLabel: 'OK', hideCancel: true }, options));
+}
+document.getElementById('confirm-cancel-btn').addEventListener('click', closeConfirm);
+document.getElementById('confirm-ok-btn').addEventListener('click', () => {
+  const cb = confirmCallback;
+  closeConfirm();
+  if (cb) cb();
+});
+
+// ==== DESHACER (tras eliminar) ====
+let undoCallback = null;
+let undoTimeoutId = null;
+function showUndoToast(message, restoreFn, duration = 6000) {
+  undoCallback = restoreFn;
+  clearTimeout(undoTimeoutId);
+  document.getElementById('undo-toast-message').textContent = message;
+  document.getElementById('undo-toast').classList.add('active');
+  undoTimeoutId = setTimeout(hideUndoToast, duration);
+}
+function hideUndoToast() {
+  document.getElementById('undo-toast').classList.remove('active');
+  clearTimeout(undoTimeoutId);
+  undoCallback = null;
+}
+function performUndo() {
+  const cb = undoCallback;
+  hideUndoToast();
+  if (cb) cb();
+}
+
 // ==== SISTEMA DE NAVEGACIÓN ====
 function goTo(view) {
+  hideUndoToast();
   currentView = view;
   if (view === 'workout') {
     const todayCatIds = state.routine[new Date().getDay()] || [];
@@ -410,18 +550,22 @@ function goTo(view) {
 function render() {
   const header = document.getElementById('main-header');
   const homeView = document.getElementById('home-view');
+  const sessionsView = document.getElementById('sessions-view');
   const workspaceView = document.getElementById('workspace-view');
   const ioSection = document.getElementById('io-section');
   const timerBar = document.getElementById('timer-bar');
 
   if (currentView === 'home') {
-    homeView.style.display = 'block'; workspaceView.style.display = 'none'; ioSection.style.display = 'none'; timerBar.style.display = 'none';
+    homeView.style.display = 'block'; sessionsView.style.display = 'none'; workspaceView.style.display = 'none'; ioSection.style.display = 'none'; timerBar.style.display = 'none';
     renderHomeHeader(header); renderHomeContent(homeView);
+  } else if (currentView === 'sessions') {
+    homeView.style.display = 'none'; sessionsView.style.display = 'block'; workspaceView.style.display = 'none'; ioSection.style.display = 'none'; timerBar.style.display = 'none';
+    renderSessionsHeader(header); renderSessionsContent(sessionsView);
   } else if (currentView === 'workout') {
-    homeView.style.display = 'none'; workspaceView.style.display = 'flex'; ioSection.style.display = 'none'; timerBar.style.display = 'flex';
+    homeView.style.display = 'none'; sessionsView.style.display = 'none'; workspaceView.style.display = 'flex'; ioSection.style.display = 'none'; timerBar.style.display = 'flex';
     renderWorkoutHeader(header); renderTabs(); renderMain();
   } else if (currentView === 'edit') {
-    homeView.style.display = 'none'; workspaceView.style.display = 'flex'; ioSection.style.display = 'flex'; timerBar.style.display = 'none';
+    homeView.style.display = 'none'; sessionsView.style.display = 'none'; workspaceView.style.display = 'flex'; ioSection.style.display = 'flex'; timerBar.style.display = 'none';
     renderEditHeader(header); renderTabs(); renderMain();
   }
 }
@@ -462,6 +606,74 @@ function renderEditHeader(header) {
     </div>
   `;
 }
+function renderSessionsHeader(header) {
+  header.innerHTML = `
+    <div class="header-top">
+      <div class="header-title">
+        <button class="btn-back" onclick="goTo('home')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+        <h1>Historial</h1>
+      </div>
+    </div>
+  `;
+}
+
+// --- Render Historial de Sesiones ---
+function getFormattedDate(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const date = new Date(y, m - 1, d);
+  let text = date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function renderSessionsContent(container) {
+  const dates = [...new Set(state.logs.map(l => l.date))].sort((a, b) => b.localeCompare(a));
+
+  if (dates.length === 0) {
+    container.innerHTML = '<div class="empty">Aún no hay sesiones guardadas.<br>Completa un entrenamiento para verlo aquí.</div>';
+    return;
+  }
+
+  container.innerHTML = '<div class="session-list" id="session-list"></div>';
+  const list = document.getElementById('session-list');
+  dates.forEach(date => {
+    const dayLogs = state.logs.filter(l => l.date === date);
+    const cats = [...new Set(dayLogs.map(l => l.catName || 'Sin grupo'))];
+    const card = document.createElement('div');
+    card.className = 'session-card';
+    card.onclick = () => openSessionDetail(date);
+    card.innerHTML = `
+      <div class="session-card-date">${getFormattedDate(date)}</div>
+      <div class="session-card-summary">${cats.join(' · ')} — ${dayLogs.length} ejercicio${dayLogs.length === 1 ? '' : 's'}</div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function openSessionDetail(date) {
+  const dayLogs = state.logs.filter(l => l.date === date);
+  if (dayLogs.length === 0) return;
+  document.getElementById('session-detail-title').textContent = getFormattedDate(date);
+  const groups = {};
+  dayLogs.forEach(l => {
+    const catName = l.catName || 'Sin grupo';
+    if (!groups[catName]) groups[catName] = [];
+    groups[catName].push(l);
+  });
+  const list = document.getElementById('session-detail-list');
+  list.innerHTML = Object.keys(groups).sort((a, b) => a.localeCompare(b, 'es')).map(catName => `
+    <div>
+      <div class="session-detail-group-title">${catName}</div>
+      ${groups[catName].map(l => `
+        <div class="log-item" style="margin-bottom:6px;">
+          <span>${l.name || 'Sin nombre'}</span>
+          <span class="log-data">${l.sets}x${l.repsCount || '-'} &mdash; <span style="color:var(--accent);">${l.weight} kg</span></span>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+  document.getElementById('session-detail-modal').classList.add('active');
+}
+function closeSessionDetail() { document.getElementById('session-detail-modal').classList.remove('active'); }
 
 // --- Render Home ---
 function renderHomeContent(container) {
@@ -482,7 +694,7 @@ function renderHomeContent(container) {
     const isCompleted = !!state.history[dateStr];
 
     trackerHTML += `
-      <div class="day-dot ${isToday ? 'active' : ''} ${isCompleted ? 'completed' : ''}">
+      <div class="day-dot ${isToday ? 'active' : ''} ${isCompleted ? 'completed' : ''}" ${isCompleted ? `onclick="openSessionDetail('${dateStr}')" style="cursor:pointer;"` : ''}>
         <span class="day-label">${shortNames[index]}</span>
         <div class="day-circle">${isCompleted ? '✓' : ''}</div>
       </div>
@@ -495,7 +707,7 @@ function renderHomeContent(container) {
     const catIds = state.routine[dNum] || [];
     let catsText = 'Descanso';
     if (catIds.length > 0) {
-      catsText = catIds.map(id => { const c = getCategory(id); return c ? c.name : ''; }).filter(n => n).join(', ');
+      catsText = catIds.map(id => { const c = getCategory(id); return c ? c.name : ''; }).filter(n => n).sort((a, b) => a.localeCompare(b, 'es')).join(', ');
     }
     weeklyRowsHTML += `
       <div class="weekly-day-row ${isToday ? 'is-today' : ''}">
@@ -532,6 +744,13 @@ function renderHomeContent(container) {
         </div>
         <span class="menu-btn-icon">→</span>
       </div>
+      <div class="menu-btn" onclick="goTo('sessions')">
+        <div class="menu-btn-content">
+          <span>📅 Historial de Sesiones</span>
+          <span class="menu-btn-desc">Consulta qué entrenaste cada día.</span>
+        </div>
+        <span class="menu-btn-icon">→</span>
+      </div>
     </div>
   `;
 }
@@ -547,20 +766,45 @@ function renderTabs(){
     catsToRender = state.categories;
   }
 
-  catsToRender.forEach(cat => {
-    const btn = document.createElement('div'); btn.className = 'tab' + (cat.id === activeCategory ? ' active' : '');
+  catsToRender.forEach((cat, idx) => {
+    const isActive = cat.id === activeCategory;
+    const btn = document.createElement('div'); btn.className = 'tab' + (isActive ? ' active' : '');
+
+    if (isActive && currentView === 'edit' && idx > 0) {
+      const leftBtn = document.createElement('span'); leftBtn.className = 'tab-order-btn'; leftBtn.textContent = '‹';
+      leftBtn.onclick = (e) => { e.stopPropagation(); moveCategory(cat.id, -1); };
+      btn.appendChild(leftBtn);
+    }
+
     const nameSpan = document.createElement('span'); nameSpan.textContent = cat.name; btn.appendChild(nameSpan);
 
-    if(cat.id === activeCategory && currentView === 'edit') {
+    if (isActive && currentView === 'edit' && idx < catsToRender.length - 1) {
+      const rightBtn = document.createElement('span'); rightBtn.className = 'tab-order-btn'; rightBtn.textContent = '›';
+      rightBtn.onclick = (e) => { e.stopPropagation(); moveCategory(cat.id, 1); };
+      btn.appendChild(rightBtn);
+    }
+
+    if(isActive && currentView === 'edit') {
       const delCatBtn = document.createElement('div'); delCatBtn.className = 'tab-del'; delCatBtn.textContent = '✕';
       delCatBtn.onclick = (e) => {
         e.stopPropagation();
-        if(confirm(`¿Eliminar grupo "${cat.name}"?`)){
+        showConfirm(`¿Eliminar el grupo "${cat.name}"? También se borrarán sus ejercicios.`, () => {
+          const catIndex = state.categories.findIndex(c => c.id === cat.id);
+          const catClone = JSON.parse(JSON.stringify(cat));
+          const routineSnapshot = JSON.parse(JSON.stringify(state.routine));
+
           state.categories = state.categories.filter(c => c.id !== cat.id);
           for(let d in state.routine) state.routine[d] = state.routine[d].filter(id => id !== cat.id);
           activeCategory = state.categories[0] ? state.categories[0].id : null;
           saveState(); render();
-        }
+
+          showUndoToast(`Grupo "${catClone.name}" eliminado.`, () => {
+            state.categories.splice(Math.min(catIndex, state.categories.length), 0, catClone);
+            state.routine = routineSnapshot;
+            activeCategory = catClone.id;
+            saveState(); render();
+          });
+        });
       };
       btn.appendChild(delCatBtn);
     }
@@ -581,6 +825,28 @@ function renderTabs(){
       tabs.appendChild(addBtn);
     }
   }
+}
+
+function confirmAddCategory(name) {
+  addingCategory = false;
+  const trimmed = (name || '').trim();
+  if (trimmed) {
+    const newCat = { id: uid(), name: trimmed, exercises: [] };
+    state.categories.push(newCat);
+    activeCategory = newCat.id;
+    saveState();
+  }
+  render();
+}
+
+function moveCategory(catId, direction) {
+  const idx = state.categories.findIndex(c => c.id === catId);
+  const newIdx = idx + direction;
+  if (idx === -1 || newIdx < 0 || newIdx >= state.categories.length) return;
+  const tmp = state.categories[idx];
+  state.categories[idx] = state.categories[newIdx];
+  state.categories[newIdx] = tmp;
+  saveState(); render();
 }
 
 // --- Render Ejercicios ---
@@ -623,9 +889,16 @@ function renderExerciseRow(cat, ex, index){
   nameInput.addEventListener('change', () => { ex.name = nameInput.value.trim(); saveState(); });
   topRow.appendChild(nameInput);
 
-  const histBtn = document.createElement('button'); histBtn.className = 'btn-history'; histBtn.innerHTML = '📈';
-  histBtn.onclick = () => openHistory(ex);
-  topRow.appendChild(histBtn);
+  // Bloque de estadísticas a la derecha del nombre: columna peso+series y columna subir+historial
+  const statsRow = document.createElement('div'); statsRow.className = 'row-stats';
+
+  const weightCol = document.createElement('div'); weightCol.className = 'stat-col';
+  const weightWrap = document.createElement('div');
+  weightWrap.className = 'weight-wrap' + (ex.upWeight ? ' highlight' : ''); 
+  const weightIn = document.createElement('input'); weightIn.className = 'weight-input'; weightIn.type = 'number'; weightIn.step = '0.5'; weightIn.value = ex.weight;
+  weightIn.addEventListener('change', () => { ex.weight = parseFloat(weightIn.value) || 0; saveState(); });
+  const unit = document.createElement('span'); unit.className = 'weight-unit'; unit.textContent = 'kg';
+  weightWrap.append(weightIn, unit);
 
   const setsRepsWrap = document.createElement('div'); setsRepsWrap.className = 'sets-reps-wrap';
   const setsIn = document.createElement('input'); setsIn.className = 'sets-reps-input'; setsIn.type = 'number'; setsIn.placeholder = '3'; setsIn.value = ex.sets;
@@ -634,20 +907,22 @@ function renderExerciseRow(cat, ex, index){
   const repsIn = document.createElement('input'); repsIn.className = 'sets-reps-input'; repsIn.type = 'number'; repsIn.placeholder = '12'; repsIn.value = ex.repsCount;
   repsIn.addEventListener('change', () => { ex.repsCount = parseInt(repsIn.value) || ''; saveState(); });
   setsRepsWrap.append(setsIn, sep, repsIn);
-  topRow.appendChild(setsRepsWrap);
 
-  const weightWrap = document.createElement('div');
-  weightWrap.className = 'weight-wrap' + (ex.upWeight ? ' highlight' : ''); 
-  const weightIn = document.createElement('input'); weightIn.className = 'weight-input'; weightIn.type = 'number'; weightIn.step = '0.5'; weightIn.value = ex.weight;
-  weightIn.addEventListener('change', () => { ex.weight = parseFloat(weightIn.value) || 0; saveState(); });
-  const unit = document.createElement('span'); unit.className = 'weight-unit'; unit.textContent = 'kg';
-  weightWrap.append(weightIn, unit);
-  topRow.appendChild(weightWrap);
+  weightCol.append(weightWrap, setsRepsWrap);
+  statsRow.appendChild(weightCol);
 
+  const actionCol = document.createElement('div'); actionCol.className = 'stat-col';
   const upWeight = document.createElement('div'); upWeight.className = 'up-weight-check' + (ex.upWeight ? ' active' : '');
   upWeight.innerHTML = `<div class="up-weight-box">↑</div><span class="up-weight-label">Subir</span>`;
   upWeight.onclick = () => { ex.upWeight = !ex.upWeight; saveState(); render(); };
-  topRow.appendChild(upWeight);
+
+  const histBtn = document.createElement('button'); histBtn.className = 'btn-history'; histBtn.innerHTML = '📈';
+  histBtn.onclick = () => openHistory(ex);
+
+  actionCol.append(upWeight, histBtn);
+  statsRow.appendChild(actionCol);
+
+  topRow.appendChild(statsRow);
 
   if (currentView === 'edit') {
     const orderBtns = document.createElement('div'); orderBtns.className = 'order-btns';
@@ -659,7 +934,23 @@ function renderExerciseRow(cat, ex, index){
     topRow.appendChild(orderBtns);
 
     const del = document.createElement('button'); del.className = 'del'; del.textContent = '✕';
-    del.onclick = () => { cat.exercises = cat.exercises.filter(e => e.id !== ex.id); saveState(); render(); };
+    del.onclick = () => {
+      showConfirm(`¿Eliminar el ejercicio "${ex.name || 'sin nombre'}"?`, () => {
+        const exIndex = cat.exercises.findIndex(e => e.id === ex.id);
+        const exClone = JSON.parse(JSON.stringify(ex));
+        cat.exercises = cat.exercises.filter(e => e.id !== ex.id);
+        saveState(); render();
+
+        showUndoToast(`Ejercicio "${exClone.name || 'sin nombre'}" eliminado.`, () => {
+          const c = getCategory(cat.id);
+          if (c) {
+            c.exercises.splice(Math.min(exIndex, c.exercises.length), 0, exClone);
+            activeCategory = cat.id;
+            saveState(); render();
+          }
+        });
+      });
+    };
     topRow.appendChild(del);
   }
 
@@ -765,23 +1056,23 @@ function saveSession() {
   let hasChecked = false;
   state.categories.forEach(cat => { cat.exercises.forEach(ex => { if((ex.completedSets || 0) > 0) hasChecked = true; }); });
 
-  if(!hasChecked) { alert("No has marcado ninguna serie completada aún."); return; }
+  if(!hasChecked) { showAlert("No has marcado ninguna serie completada aún."); return; }
 
-  if (confirm('¿Terminar entrenamiento? Se guardarán los pesos y volverás al inicio.')) {
+  showConfirm('¿Terminar entrenamiento? Se guardarán los pesos y volverás al inicio.', () => {
     const todayStr = getLocalDateStr(new Date());
     state.history[todayStr] = true;
     
     state.categories.forEach(cat => {
       cat.exercises.forEach(ex => {
         if((ex.completedSets || 0) > 0) {
-          state.logs.push({ id: ex.id, date: todayStr, weight: ex.weight, sets: ex.completedSets, repsCount: ex.repsCount });
+          state.logs.push({ id: ex.id, name: ex.name, catName: cat.name, date: todayStr, weight: ex.weight, sets: ex.completedSets, repsCount: ex.repsCount });
           ex.completedSets = 0; // Reiniciamos las cajas para la próxima
         }
       });
     });
     saveState(); 
     goTo('home'); 
-  }
+  }, { title: 'Guardar sesión', okLabel: 'Guardar' });
 }
 
 // Modal Planificador
@@ -813,25 +1104,54 @@ function formatTime(sec){
   return `${m}:${s}`; 
 }
 
+function playBeep() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const now = audioCtx.currentTime;
+    for (let i = 0; i < 3; i++) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 880;
+      const start = now + i * 0.3;
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(0.35, start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.25);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(start); osc.stop(start + 0.3);
+    }
+  } catch(e) { console.error('No se pudo reproducir el sonido', e); }
+}
+
 function triggerAutoTimer() {
   if (originalTime === 0) {
-      setTimer(90); // Por defecto si no se ha elegido
+      setTimer(90, false); // Por defecto si no se ha elegido
   } else {
-      setTimer(originalTime); // Resetea el tiempo seleccionado
+      setTimer(originalTime, isCustomTimerSelected); // Resetea el tiempo seleccionado
   }
   document.getElementById('timer-bar').style.display = 'flex';
   playTimer();
 }
 
-function setTimer(seconds) {
+function setTimer(seconds, isCustom = isCustomTimerSelected) {
   clearInterval(timerInterval);
   isTimerRunning = false;
   timeRemaining = seconds;
   originalTime = seconds;
+  isCustomTimerSelected = isCustom;
   
   document.getElementById('timer-display').textContent = formatTime(timeRemaining);
   document.querySelectorAll('.timer-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById(`tbtn-${seconds}`).classList.add('selected');
+  const presetBtn = document.getElementById(`tbtn-${seconds}`);
+  if (presetBtn) presetBtn.classList.add('selected');
+
+  const toggleBtn = document.getElementById('timer-custom-toggle');
+  if (toggleBtn) {
+    toggleBtn.classList.toggle('selected', isCustom);
+    toggleBtn.textContent = isCustom ? `⏱ ${formatTime(seconds)} personalizado` : '+ Personalizado';
+  }
+  hideCustomTimerInput();
   
   document.getElementById('btn-play').style.display = 'flex';
   document.getElementById('btn-pause').style.display = 'none';
@@ -839,9 +1159,36 @@ function setTimer(seconds) {
   bar.classList.remove('timer-done', 'active');
 }
 
+function toggleCustomTimerInput() {
+  document.getElementById('timer-custom-toggle-wrap').style.display = 'none';
+  document.getElementById('timer-custom-wrap').style.display = 'flex';
+  const input = document.getElementById('timer-custom-input');
+  input.value = '';
+  setTimeout(() => input.focus(), 0);
+}
+
+function hideCustomTimerInput() {
+  document.getElementById('timer-custom-toggle-wrap').style.display = 'block';
+  document.getElementById('timer-custom-wrap').style.display = 'none';
+}
+
+function applyCustomTimer() {
+  const input = document.getElementById('timer-custom-input');
+  let val = parseInt(input.value);
+  if (!val || val <= 0) { input.focus(); return; }
+  if (val > 5999) val = 5999; // límite razonable (99:59)
+  setTimer(val, true);
+}
+
 function playTimer() {
   if (originalTime === 0) return; 
   if (timeRemaining <= 0) timeRemaining = originalTime; 
+
+  // Desbloquea/activa el audio dentro del gesto del usuario
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  } catch(e) {}
   
   isTimerRunning = true;
   document.getElementById('btn-play').style.display = 'none';
@@ -862,7 +1209,7 @@ function playTimer() {
       bar.classList.remove('active');
       document.getElementById('btn-play').style.display = 'flex';
       document.getElementById('btn-pause').style.display = 'none';
-      if(navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
+      playBeep();
     } else {
       document.getElementById('timer-display').textContent = formatTime(timeRemaining);
     }
@@ -898,9 +1245,9 @@ document.getElementById('file-import').addEventListener('change', function(e) {
   reader.onload = function(evt) {
     try {
       const imported = JSON.parse(evt.target.result);
-      if (imported && imported.categories) { state = imported; saveState(); render(); alert('Datos importados.'); }
-      else alert('Formato incorrecto.');
-    } catch (err) { alert('Error al leer el archivo.'); }
+      if (imported && imported.categories) { state = imported; saveState(); render(); showAlert('Datos importados.'); }
+      else showAlert('Formato incorrecto.');
+    } catch (err) { showAlert('Error al leer el archivo.'); }
   };
   reader.readAsText(file); e.target.value = '';
 });
