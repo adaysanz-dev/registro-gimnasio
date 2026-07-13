@@ -85,16 +85,27 @@
   .day-dot {
     flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
   }
-  .day-label { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+  .day-label { font-size: 10px; color: var(--text-muted); font-weight: 600; transition: all .2s; }
   .day-circle {
     width: 24px; height: 24px; border-radius: 50%;
     background: var(--surface-2); border: 1px solid var(--border);
     display: flex; align-items: center; justify-content: center;
     font-size: 10px; color: transparent; transition: all .2s;
   }
-  .day-dot.active .day-label { color: var(--text); }
+  
+  /* ESTILOS PARA DESTACAR EL DÍA ACTUAL */
+  .day-dot.active .day-label { 
+    color: var(--accent); 
+    font-weight: 700; 
+    font-size: 11px;
+  }
+  .day-dot.active .day-circle {
+    border-color: var(--accent);
+    box-shadow: 0 0 8px rgba(255, 106, 57, 0.4);
+  }
+  
   .day-dot.completed .day-circle {
-    background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: bold;
+    background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: bold; box-shadow: none;
   }
 
   /* Planificación del día */
@@ -310,7 +321,6 @@
 
 <script>
 const STORAGE_KEY = 'gymlog-data';
-// Cambiado Core por Cardio
 const DEFAULT_CATEGORIES = ['Pierna','Espalda','Pecho','Hombro','Brazo','Cardio'];
 const DAY_NAMES = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 
@@ -327,8 +337,8 @@ function uid(){ return Math.random().toString(36).slice(2,9); }
 function defaultState(){
   return {
     categories: DEFAULT_CATEGORIES.map(name => ({ id: uid(), name, exercises: [] })),
-    history: {}, // { 'YYYY-MM-DD': true }
-    routine: { 0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[] } // ID de categorías por día
+    history: {}, 
+    routine: { 0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[] } 
   };
 }
 
@@ -337,9 +347,23 @@ function loadState(){
     const raw = localStorage.getItem(STORAGE_KEY);
     state = raw ? JSON.parse(raw) : defaultState();
     
-    // Migraciones si el JSON es antiguo
     if(!state.history) state.history = {};
     if(!state.routine) state.routine = { 0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[] };
+    
+    // --- SCRIPT DE MIGRACIÓN: Forzar la aparición de Cardio ---
+    let hasCardio = false;
+    state.categories.forEach(c => {
+      if (c.name.toLowerCase() === 'core') {
+        c.name = 'Cardio'; // Renombramos Core a Cardio si existe
+        hasCardio = true;
+      } else if (c.name.toLowerCase() === 'cardio') {
+        hasCardio = true;
+      }
+    });
+    // Si el usuario no tenía ni Core ni Cardio, le añadimos Cardio al final
+    if (!hasCardio) {
+       state.categories.push({ id: uid(), name: 'Cardio', exercises: [] });
+    }
     
   }catch(e){ state = defaultState(); }
   activeCategory = state.categories[0] ? state.categories[0].id : null;
@@ -367,16 +391,12 @@ function getLocalDateStr(date) {
 function renderHeader(){
   const today = new Date();
   const currentDayNum = today.getDay();
-  const localTodayStr = getLocalDateStr(today);
   
-  // Tracker Semanal (L a D)
   const tracker = document.getElementById('week-tracker');
   tracker.innerHTML = '';
-  // Ajuste para que empiece en Lunes (1) y acabe en Domingo (0)
   const weekDays = [1, 2, 3, 4, 5, 6, 0];
   const shortNames = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
   
-  // Calcular la fecha del lunes de esta semana
   let diff = today.getDate() - currentDayNum + (currentDayNum === 0 ? -6 : 1);
   let monday = new Date(today.setDate(diff));
 
@@ -385,7 +405,7 @@ function renderHeader(){
     loopDate.setDate(monday.getDate() + index);
     const dateStr = getLocalDateStr(loopDate);
     
-    const isToday = dNum === new Date().getDay(); // Vuelve a evaluar por si cambió de día
+    const isToday = dNum === new Date().getDay(); 
     const isCompleted = !!state.history[dateStr];
 
     const dot = document.createElement('div');
@@ -397,7 +417,6 @@ function renderHeader(){
     tracker.appendChild(dot);
   });
 
-  // Hoy Toca
   const todayPlanText = document.getElementById('today-text');
   const todayCatIds = state.routine[new Date().getDay()] || [];
   if(todayCatIds.length === 0){
@@ -430,7 +449,6 @@ function renderTabs(){
         e.stopPropagation();
         if(confirm(`¿Eliminar grupo "${cat.name}"?`)){
           state.categories = state.categories.filter(c => c.id !== cat.id);
-          // Limpiar referencias en rutina
           for(let d in state.routine) state.routine[d] = state.routine[d].filter(id => id !== cat.id);
           activeCategory = state.categories[0] ? state.categories[0].id : null;
           saveState(); render();
@@ -569,7 +587,6 @@ function renderExerciseRow(cat, ex, index){
 
 // === Lógica Historial / Guardar Sesión ===
 document.getElementById('btn-save-session').addEventListener('click', () => {
-  // Verificar si hay algo marcado hoy en algún grupo
   let hasChecked = false;
   state.categories.forEach(cat => {
     cat.exercises.forEach(ex => { if(ex.checked) hasChecked = true; });
@@ -584,7 +601,6 @@ document.getElementById('btn-save-session').addEventListener('click', () => {
     const todayStr = getLocalDateStr(new Date());
     state.history[todayStr] = true;
     
-    // Desmarcar todo
     state.categories.forEach(cat => {
       cat.exercises.forEach(ex => ex.checked = false);
     });
@@ -606,7 +622,7 @@ function openPlanner(){
 }
 function closePlanner(){
   modal.classList.remove('active');
-  render(); // Actualizar cabecera
+  render(); 
 }
 daySelect.addEventListener('change', renderPlannerCats);
 
@@ -680,7 +696,6 @@ function stopTimer(){
   timerDisplay.textContent = "⏱️ 00:00";
 }
 
-// Ocultar menu timer si haces clic fuera
 document.addEventListener('click', (e) => {
   if(!timerFab.contains(e.target)){
     timerMenu.classList.remove('show');
