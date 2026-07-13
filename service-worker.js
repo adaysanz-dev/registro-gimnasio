@@ -1,4 +1,4 @@
-const CACHE_NAME = 'registro-gimnasio-v14';
+const CACHE_NAME = 'registro-gimnasio-v15';
 const ASSETS = [
   './index.html',
   './manifest.json',
