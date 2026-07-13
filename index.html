@@ -42,7 +42,7 @@
 
   #app{
     max-width:520px; margin:0 auto; min-height:100vh;
-    display:flex; flex-direction:column; padding-bottom:80px;
+    display:flex; flex-direction:column; padding-bottom:100px;
     padding-top:env(safe-area-inset-top);
   }
   header{ padding:22px 18px 14px; display:flex; flex-direction: column; gap:12px; }
@@ -117,9 +117,7 @@
   }
   .row.checked .ex-name{ color:var(--text-muted); text-decoration:line-through; text-decoration-color:var(--good); }
   
-  .btn-history {
-    background: transparent; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; padding: 0 4px;
-  }
+  .btn-history { background: transparent; border: none; color: var(--text-muted); font-size: 14px; cursor: pointer; padding: 0 4px; }
   .btn-history:hover { color: var(--accent); }
 
   .sets-reps-wrap {
@@ -135,9 +133,7 @@
   .weight-wrap{
     display:flex; align-items:baseline; gap:2px; background:var(--surface-2); border-radius:6px; padding:5px 6px; flex-shrink:0; border: 1px solid transparent; transition: all 0.3s;
   }
-  .weight-wrap.highlight {
-    border-color: var(--accent); box-shadow: 0 0 8px rgba(255, 106, 57, 0.4);
-  }
+  .weight-wrap.highlight { border-color: var(--accent); box-shadow: 0 0 8px rgba(255, 106, 57, 0.4); }
   .weight-input{
     width:50px; background:transparent; border:none; color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; text-align:right; outline:none;
   }
@@ -182,9 +178,7 @@
     padding: 20px; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto;
   }
   .modal-title { font-family: 'Oswald', sans-serif; text-transform: uppercase; margin: 0 0 16px 0; color: var(--accent); }
-  .modal-day-select {
-    width: 100%; padding: 10px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 16px; outline: none;
-  }
+  .modal-day-select { width: 100%; padding: 10px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 16px; outline: none; }
   .modal-cat-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
   .modal-cat-item { display: flex; align-items: center; gap: 10px; font-size: 14px; }
   .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
@@ -197,24 +191,42 @@
   .log-date { color: var(--text-muted); font-size: 11px; }
   .log-data { font-family: 'IBM Plex Mono', monospace; color: var(--text); font-weight: 600; }
 
-  /* Timer */
-  .fab-timer {
-    position: fixed; bottom: 20px; right: 20px; background: var(--surface); border: 2px solid var(--accent);
-    border-radius: 50px; padding: 8px 16px; display: flex; align-items: center; gap: 10px; z-index: 50; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  /* NUEVO: Timer Bar Flotante */
+  .timer-bar {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 10px 14px;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6); z-index: 50;
+    width: 92%; max-width: 420px; transition: border-color 0.3s;
   }
-  .fab-timer.active { background: var(--accent); color: var(--bg); }
-  .fab-display { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 16px; cursor: pointer; }
-  .fab-menu {
-    position: absolute; bottom: 100%; right: 0; margin-bottom: 10px; background: var(--surface);
-    border: 1px solid var(--border); border-radius: 8px; padding: 8px; display: none; flex-direction: column; gap: 6px;
+  .timer-bar.active { border-color: var(--accent); }
+  .timer-presets { display: flex; gap: 4px; }
+  .timer-btn {
+    background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted);
+    padding: 6px 10px; border-radius: 8px; font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;
   }
-  .fab-timer:hover .fab-menu, .fab-menu.show { display: flex; }
-  .fab-btn {
-    background: var(--surface-2); border: none; color: var(--text); padding: 8px 16px; border-radius: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; cursor: pointer;
+  .timer-btn.selected { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .timer-display { 
+    font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 18px; 
+    color: var(--text); width: 65px; text-align: center; 
   }
-  .fab-btn:hover { background: var(--accent); color: var(--bg); }
-  @keyframes flash { 0%, 100% { background: var(--surface); } 50% { background: var(--accent); color: var(--bg); } }
-  .timer-done { animation: flash 1s infinite; }
+  .timer-controls { display: flex; gap: 4px; }
+  .timer-icon-btn {
+    background: transparent; border: none; color: var(--text);
+    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 50%; cursor: pointer; transition: all 0.2s;
+  }
+  .timer-icon-btn:hover { background: var(--surface-2); color: var(--accent); }
+  .timer-icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
+  
+  @keyframes flashBorder { 
+    0%, 100% { border-color: var(--border); box-shadow: 0 8px 24px rgba(0,0,0,0.6); } 
+    50% { border-color: var(--accent); box-shadow: 0 0 15px var(--accent); } 
+  }
+  .timer-bar.timer-done { animation: flashBorder 1s infinite; }
+  .timer-done .timer-display { color: var(--accent); }
 </style>
 </head>
 <body>
@@ -279,14 +291,26 @@
   </div>
 </div>
 
-<div class="fab-timer" id="fab-timer">
-  <div class="fab-menu" id="fab-menu">
-    <button class="fab-btn" onclick="startTimer(60)">60s</button>
-    <button class="fab-btn" onclick="startTimer(90)">90s</button>
-    <button class="fab-btn" onclick="startTimer(120)">120s</button>
-    <button class="fab-btn" onclick="stopTimer()">Detener</button>
+<div class="timer-bar" id="timer-bar">
+  <div class="timer-presets">
+    <button class="timer-btn" id="tbtn-60" onclick="setTimer(60)">60s</button>
+    <button class="timer-btn" id="tbtn-90" onclick="setTimer(90)">90s</button>
+    <button class="timer-btn" id="tbtn-120" onclick="setTimer(120)">120s</button>
   </div>
-  <div class="fab-display" id="timer-display" onclick="toggleTimerMenu()">⏱️ 00:00</div>
+  
+  <div class="timer-display" id="timer-display">00:00</div>
+  
+  <div class="timer-controls">
+    <button class="timer-icon-btn" onclick="playTimer()" id="btn-play">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+    <button class="timer-icon-btn" onclick="pauseTimer()" id="btn-pause" style="display: none;">
+      <svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+    </button>
+    <button class="timer-icon-btn" onclick="resetTimer()" id="btn-reset">
+      <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+    </button>
+  </div>
 </div>
 
 <script>
@@ -296,8 +320,12 @@ const DEFAULT_CATEGORIES = ['Pierna','Espalda','Pecho','Hombro','Brazo','Cardio'
 let state = null;
 let activeCategory = null;
 let addingCategory = false;
+
+// Variables Timer
 let timerInterval;
 let timeRemaining = 0;
+let originalTime = 0;
+let isTimerRunning = false;
 
 function uid(){ return Math.random().toString(36).slice(2,9); }
 
@@ -306,7 +334,7 @@ function defaultState(){
     categories: DEFAULT_CATEGORIES.map(name => ({ id: uid(), name, exercises: [] })),
     history: {}, 
     routine: { 0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[] },
-    logs: [] // <-- NUEVO: Aquí guardaremos la memoria de pesos
+    logs: [] 
   };
 }
 
@@ -316,7 +344,7 @@ function loadState(){
     state = raw ? JSON.parse(raw) : defaultState();
     if(!state.history) state.history = {};
     if(!state.routine) state.routine = { 0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[] };
-    if(!state.logs) state.logs = []; // Inicializamos logs si es una versión antigua
+    if(!state.logs) state.logs = []; 
     
     let hasCardio = false;
     state.categories.forEach(c => {
@@ -470,7 +498,6 @@ function renderExerciseRow(cat, ex, index){
   nameInput.addEventListener('change', () => { ex.name = nameInput.value.trim(); saveState(); });
   topRow.appendChild(nameInput);
 
-  // NUEVO: Botón Historial
   const histBtn = document.createElement('button'); histBtn.className = 'btn-history'; histBtn.innerHTML = '📈';
   histBtn.onclick = () => openHistory(ex);
   topRow.appendChild(histBtn);
@@ -484,7 +511,6 @@ function renderExerciseRow(cat, ex, index){
   setsRepsWrap.append(setsIn, sep, repsIn);
   topRow.appendChild(setsRepsWrap);
 
-  // NUEVO: Resaltado de la caja si toca subir peso
   const weightWrap = document.createElement('div');
   weightWrap.className = 'weight-wrap' + (ex.upWeight ? ' highlight' : ''); 
   
@@ -530,14 +556,12 @@ function openHistory(ex) {
   const chartContainer = document.getElementById('history-chart');
   const listContainer = document.getElementById('history-list');
   
-  // Extraer los logs de este ejercicio específico y ordenarlos por fecha
   const logs = state.logs.filter(l => l.id === ex.id).sort((a,b) => a.date.localeCompare(b.date));
   
   if(logs.length === 0) {
     chartContainer.innerHTML = '';
     listContainer.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:13px; padding:20px;">Aún no has guardado sesiones para este ejercicio.</div>';
   } else {
-    // Dibujar gráfico SVG simple
     if (logs.length > 1) {
       const width = 300, height = 120, pad = 20;
       const weights = logs.map(l => l.weight);
@@ -568,7 +592,6 @@ function openHistory(ex) {
       chartContainer.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding-bottom:15px;">Registra otra sesión para ver el gráfico.</div>';
     }
 
-    // Dibujar lista invertida (más reciente arriba)
     listContainer.innerHTML = [...logs].reverse().map(l => `
       <div class="log-item">
         <span class="log-date">${l.date}</span>
@@ -580,11 +603,9 @@ function openHistory(ex) {
   modal.classList.add('active');
 }
 
-function closeHistory() {
-  document.getElementById('history-modal').classList.remove('active');
-}
+function closeHistory() { document.getElementById('history-modal').classList.remove('active'); }
 
-// === Lógica Guardar Sesión Actualizada ===
+// === Lógica Guardar Sesión ===
 document.getElementById('btn-save-session').addEventListener('click', () => {
   let hasChecked = false;
   state.categories.forEach(cat => { cat.exercises.forEach(ex => { if(ex.checked) hasChecked = true; }); });
@@ -598,25 +619,16 @@ document.getElementById('btn-save-session').addEventListener('click', () => {
     state.categories.forEach(cat => {
       cat.exercises.forEach(ex => {
         if(ex.checked) {
-          // Guardamos la fotografía exacta en la memoria
-          state.logs.push({
-            id: ex.id,
-            date: todayStr,
-            weight: ex.weight,
-            sets: ex.sets,
-            repsCount: ex.repsCount
-          });
-          // Desmarcamos el check para el próximo día, PERO dejamos la caja de "Subir" como estuviera.
+          state.logs.push({ id: ex.id, date: todayStr, weight: ex.weight, sets: ex.sets, repsCount: ex.repsCount });
           ex.checked = false;
         }
       });
     });
-    
     saveState(); render();
   }
 });
 
-// Modal Planificador...
+// Modal Planificador
 const plannerModal = document.getElementById('planner-modal');
 const daySelect = document.getElementById('planner-day');
 const catList = document.getElementById('planner-cats');
@@ -638,21 +650,77 @@ function renderPlannerCats(){
   });
 }
 
-// Timer
-const timerFab = document.getElementById('fab-timer'); const timerDisplay = document.getElementById('timer-display'); const timerMenu = document.getElementById('fab-menu');
-function toggleTimerMenu(){ timerMenu.classList.toggle('show'); }
-function formatTime(sec){ const m = Math.floor(sec / 60).toString().padStart(2, '0'); const s = (sec % 60).toString().padStart(2, '0'); return `${m}:${s}`; }
-function startTimer(seconds){
-  timerMenu.classList.remove('show'); timerFab.classList.remove('timer-done'); timerFab.classList.add('active');
-  clearInterval(timerInterval); timeRemaining = seconds; timerDisplay.textContent = `⏱️ ${formatTime(timeRemaining)}`;
+// === NUEVA LÓGICA DEL TEMPORIZADOR ===
+function formatTime(sec){ 
+  const m = Math.floor(sec / 60).toString().padStart(2, '0'); 
+  const s = (sec % 60).toString().padStart(2, '0'); 
+  return `${m}:${s}`; 
+}
+
+function setTimer(seconds) {
+  clearInterval(timerInterval);
+  isTimerRunning = false;
+  timeRemaining = seconds;
+  originalTime = seconds;
+  
+  document.getElementById('timer-display').textContent = formatTime(timeRemaining);
+  
+  document.querySelectorAll('.timer-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById(`tbtn-${seconds}`).classList.add('selected');
+  
+  document.getElementById('btn-play').style.display = 'flex';
+  document.getElementById('btn-pause').style.display = 'none';
+  const bar = document.getElementById('timer-bar');
+  bar.classList.remove('timer-done', 'active');
+}
+
+function playTimer() {
+  if (originalTime === 0) return; // No hace nada si no se ha elegido tiempo
+  if (timeRemaining <= 0) timeRemaining = originalTime; // Si ya terminó, lo reinicia automático al dar play
+  
+  isTimerRunning = true;
+  document.getElementById('btn-play').style.display = 'none';
+  document.getElementById('btn-pause').style.display = 'flex';
+  
+  const bar = document.getElementById('timer-bar');
+  bar.classList.remove('timer-done');
+  bar.classList.add('active');
+  
+  clearInterval(timerInterval);
   timerInterval = setInterval(() => {
     timeRemaining--;
-    if(timeRemaining <= 0){ clearInterval(timerInterval); timerDisplay.textContent = "¡TIEMPO!"; timerFab.classList.add('timer-done'); if(navigator.vibrate) navigator.vibrate([200, 100, 200]); }
-    else { timerDisplay.textContent = `⏱️ ${formatTime(timeRemaining)}`; }
+    if (timeRemaining <= 0) {
+      clearInterval(timerInterval);
+      isTimerRunning = false;
+      document.getElementById('timer-display').textContent = "00:00";
+      bar.classList.add('timer-done');
+      bar.classList.remove('active');
+      document.getElementById('btn-play').style.display = 'flex';
+      document.getElementById('btn-pause').style.display = 'none';
+      if(navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
+    } else {
+      document.getElementById('timer-display').textContent = formatTime(timeRemaining);
+    }
   }, 1000);
 }
-function stopTimer(){ timerMenu.classList.remove('show'); clearInterval(timerInterval); timerFab.classList.remove('active', 'timer-done'); timerDisplay.textContent = "⏱️ 00:00"; }
-document.addEventListener('click', (e) => { if(!timerFab.contains(e.target)) timerMenu.classList.remove('show'); });
+
+function pauseTimer() {
+  isTimerRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('btn-play').style.display = 'flex';
+  document.getElementById('btn-pause').style.display = 'none';
+  document.getElementById('timer-bar').classList.remove('active');
+}
+
+function resetTimer() {
+  isTimerRunning = false;
+  clearInterval(timerInterval);
+  timeRemaining = originalTime;
+  document.getElementById('timer-display').textContent = formatTime(timeRemaining);
+  document.getElementById('btn-play').style.display = 'flex';
+  document.getElementById('btn-pause').style.display = 'none';
+  document.getElementById('timer-bar').classList.remove('timer-done', 'active');
+}
 
 // Import/Export
 document.getElementById('btn-export').addEventListener('click', () => {
