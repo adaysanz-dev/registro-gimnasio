@@ -51,6 +51,12 @@
     padding:22px 18px 14px;
     display:flex;
     align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .header-title {
+    display:flex;
+    align-items:center;
     gap:10px;
   }
   header svg{ flex-shrink:0; }
@@ -68,6 +74,21 @@
     margin-top:2px;
     letter-spacing:0.02em;
   }
+  .btn-restart {
+    background: var(--surface-2);
+    color: var(--accent);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .btn-restart:hover { background: var(--border); }
   .tabs{
     display:flex;
     gap:6px;
@@ -78,6 +99,9 @@
   .tabs::-webkit-scrollbar{display:none;}
   .tab{
     flex-shrink:0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-family:'Oswald',sans-serif;
     font-weight:600;
     font-size:13px;
@@ -104,7 +128,16 @@
     border:1px dashed var(--border);
     font-size:16px;
     padding:9px 14px;
+    justify-content: center;
   }
+  .tab-del {
+    color: var(--bg);
+    font-size: 14px;
+    font-weight: bold;
+    opacity: 0.7;
+    transition: opacity .15s;
+  }
+  .tab-del:hover { opacity: 1; }
   main{
     flex:1;
     padding:6px 18px 0;
@@ -191,6 +224,43 @@
     font-size:11px;
     color:var(--text-muted);
   }
+  .up-weight-check{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 0 4px;
+  }
+  .up-weight-box {
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--text-muted);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: transparent;
+    transition: all .15s;
+  }
+  .up-weight-check.active .up-weight-box {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .up-weight-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+  .up-weight-check.active .up-weight-label {
+    color: var(--accent);
+    font-weight: 600;
+  }
   .del{
     background:transparent;
     border:none;
@@ -274,17 +344,20 @@
 <body>
 <div id="app">
   <header>
-    <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
-      <rect x="2" y="12" width="4" height="6" rx="1" fill="#ff6a39"/>
-      <rect x="24" y="12" width="4" height="6" rx="1" fill="#ff6a39"/>
-      <rect x="7" y="9" width="3" height="12" rx="1" fill="#ece9e4"/>
-      <rect x="20" y="9" width="3" height="12" rx="1" fill="#ece9e4"/>
-      <rect x="9" y="14" width="12" height="2" fill="#ece9e4"/>
-    </svg>
-    <div>
-      <h1>Registro</h1>
-      <div class="sub">Tu progreso, por grupo muscular</div>
+    <div class="header-title">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+        <rect x="2" y="12" width="4" height="6" rx="1" fill="#ff6a39"/>
+        <rect x="24" y="12" width="4" height="6" rx="1" fill="#ff6a39"/>
+        <rect x="7" y="9" width="3" height="12" rx="1" fill="#ece9e4"/>
+        <rect x="20" y="9" width="3" height="12" rx="1" fill="#ece9e4"/>
+        <rect x="9" y="14" width="12" height="2" fill="#ece9e4"/>
+      </svg>
+      <div>
+        <h1>Registro</h1>
+        <div class="sub">Tu progreso, por grupo muscular</div>
+      </div>
     </div>
+    <button id="btn-restart" class="btn-restart">Reiniciar</button>
   </header>
   <nav class="tabs" id="tabs"></nav>
   <main id="main"></main>
@@ -340,9 +413,30 @@ function renderTabs(){
   const tabs = document.getElementById('tabs');
   tabs.innerHTML = '';
   state.categories.forEach(cat => {
-    const btn = document.createElement('button');
+    const btn = document.createElement('div');
     btn.className = 'tab' + (cat.id === activeCategory ? ' active' : '');
-    btn.textContent = cat.name;
+    
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = cat.name;
+    btn.appendChild(nameSpan);
+
+    // Botón para eliminar grupo muscular activo
+    if(cat.id === activeCategory) {
+      const delCatBtn = document.createElement('div');
+      delCatBtn.className = 'tab-del';
+      delCatBtn.textContent = '✕';
+      delCatBtn.onclick = (e) => {
+        e.stopPropagation();
+        if(confirm(`¿Estás seguro de eliminar el grupo "${cat.name}" y todos sus ejercicios?`)){
+          state.categories = state.categories.filter(c => c.id !== cat.id);
+          activeCategory = state.categories[0] ? state.categories[0].id : null;
+          saveState();
+          render();
+        }
+      };
+      btn.appendChild(delCatBtn);
+    }
+
     btn.onclick = () => { activeCategory = cat.id; addingExerciseFor = null; render(); };
     tabs.appendChild(btn);
   });
@@ -365,7 +459,7 @@ function renderTabs(){
     });
     input.addEventListener('blur', () => confirmAddCategory(input.value));
   } else {
-    const addBtn = document.createElement('button');
+    const addBtn = document.createElement('div');
     addBtn.className = 'tab add-tab';
     addBtn.textContent = '+';
     addBtn.onclick = () => { addingCategory = true; render(); };
@@ -460,6 +554,28 @@ function renderExerciseRow(cat, ex){
   weightWrap.appendChild(unit);
   row.appendChild(weightWrap);
 
+  // Nuevo check de "Subir peso"
+  const upWeightCheck = document.createElement('div');
+  upWeightCheck.className = 'up-weight-check' + (ex.upWeight ? ' active' : '');
+  
+  const upWeightBox = document.createElement('div');
+  upWeightBox.className = 'up-weight-box';
+  upWeightBox.textContent = '↑';
+  
+  const upWeightLabel = document.createElement('span');
+  upWeightLabel.className = 'up-weight-label';
+  upWeightLabel.textContent = 'Subir';
+  
+  upWeightCheck.appendChild(upWeightBox);
+  upWeightCheck.appendChild(upWeightLabel);
+  
+  upWeightCheck.onclick = () => {
+    ex.upWeight = !ex.upWeight;
+    saveState();
+    render();
+  };
+  row.appendChild(upWeightCheck);
+
   const del = document.createElement('button');
   del.className = 'del';
   del.textContent = '✕';
@@ -491,7 +607,8 @@ function renderAddExerciseForm(cat){
     const name = nameInput.value.trim();
     if(!name){ addingExerciseFor = null; render(); return; }
     const weight = parseFloat(weightInput.value) || 0;
-    cat.exercises.push({ id: uid(), name, weight, checked: false });
+    // Añadido upWeight: false por defecto
+    cat.exercises.push({ id: uid(), name, weight, checked: false, upWeight: false });
     addingExerciseFor = null;
     saveState();
     render();
@@ -505,6 +622,19 @@ function renderAddExerciseForm(cat){
   setTimeout(() => nameInput.focus(), 0);
   return form;
 }
+
+// Botón de reiniciar global
+document.getElementById('btn-restart').addEventListener('click', () => {
+  if (confirm('¿Estás seguro de que quieres desmarcar todos los ejercicios completados de todos los grupos?')) {
+    state.categories.forEach(cat => {
+      cat.exercises.forEach(ex => {
+        ex.checked = false;
+      });
+    });
+    saveState();
+    render();
+  }
+});
 
 loadState();
 
