@@ -525,6 +525,8 @@ function goTo(view) {
     activeCategory = todayCatIds.length > 0 ? todayCatIds[0] : null;
   } else if (view === 'edit') {
     activeCategory = state.categories.length > 0 ? state.categories[0].id : null;
+  } else if (view === 'sessions') {
+    currentCalendarDate = new Date();
   }
   render();
 }
