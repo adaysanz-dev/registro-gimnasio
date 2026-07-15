@@ -6,7 +6,7 @@
 <title>Registro de gimnasio</title>
 
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1b1d21">
+<meta name="theme-color" content="#1b1d21" id="meta-theme-color">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Registro">
@@ -28,12 +28,24 @@
     --border:#33373d;
     --radius:10px;
   }
+  
+  body.light-theme {
+    --bg: #f4f6f8;
+    --surface: #ffffff;
+    --surface-2: #eef0f3;
+    --text: #1a1d21;
+    --text-muted: #6b7280;
+    --accent: #ea580c;
+    --good: #10b981;
+    --border: #e5e7eb;
+  }
+
   *{box-sizing:border-box;}
   html,body{height:100%;}
   body{
     margin:0; background:var(--bg); color:var(--text);
     font-family:'Inter',sans-serif; -webkit-tap-highlight-color:transparent;
-    overscroll-behavior-y:contain;
+    overscroll-behavior-y:contain; transition: background-color 0.3s, color 0.3s;
   }
   
   input[type=number]::-webkit-inner-spin-button, 
@@ -52,8 +64,12 @@
   header svg{ flex-shrink:0; }
   header h1{
     font-family:'Oswald',sans-serif; font-weight:700; font-size:22px;
-    letter-spacing:0.04em; text-transform:uppercase; margin:0; line-height:1;
+    letter-spacing:0.04em; text-transform:uppercase; margin:0; line-height:1; color: var(--text);
   }
+  .header-actions { display: flex; gap: 4px; }
+  .btn-icon { background:transparent; border:none; color:var(--text-muted); cursor:pointer; display:flex; align-items:center; justify-content:center; padding:6px; border-radius: 8px; transition: color 0.2s; }
+  .btn-icon:hover { color:var(--accent); background: var(--surface-2); }
+  
   .btn-back {
     background: transparent; border: none; color: var(--accent); padding: 0 8px 0 0;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
@@ -72,6 +88,7 @@
     font-size: 16px; font-weight: 600; display: flex; align-items: center; justify-content: space-between;
     cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   }
+  body.light-theme .menu-btn { box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
   .menu-btn:hover { background: var(--surface-2); border-color: var(--accent); }
   .menu-btn-icon { color: var(--accent); font-size: 22px; line-height: 1; }
   .menu-btn-content { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
@@ -195,9 +212,6 @@
     border-radius:var(--radius); padding:12px; font-family:'Oswald',sans-serif;
     font-weight:600; letter-spacing:0.04em; text-transform:uppercase; font-size:13px; cursor:pointer; margin:4px 0 8px;
   }
-
-  .io-section { display: flex; justify-content: center; gap: 12px; padding: 10px 20px; margin-top: 20px; }
-  .footer-note{ text-align:center; color:var(--text-muted); font-size:11px; padding:0 20px 20px; margin-top: 20px; }
   
   /* Calendario Mensual y Sesiones */
   .calendar-grid { display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; padding: 0 18px 20px; }
@@ -240,6 +254,7 @@
     font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer; flex-shrink: 0;
   }
 
+  /* Modales Globales */
   .modal-overlay {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8);
     display: none; align-items: center; justify-content: center; z-index: 100;
@@ -247,13 +262,18 @@
   .modal-overlay.active { display: flex; }
   .modal-content {
     background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 20px; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto;
+    padding: 20px; width: 90%; max-width: 420px; max-height: 80vh; overflow-y: auto;
   }
   .modal-title { font-family: 'Oswald', sans-serif; text-transform: uppercase; margin: 0 0 16px 0; color: var(--accent); }
   .modal-day-select { width: 100%; padding: 10px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 16px; outline: none; }
   .modal-cat-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
   .modal-cat-item { display: flex; align-items: center; gap: 10px; font-size: 14px; }
-  .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
+  
+  /* Botones del menú de opciones modal */
+  .settings-menu-btn { width: 100%; display: flex; align-items: center; gap: 12px; background: var(--surface-2); border: 1px solid var(--border); padding: 14px 16px; border-radius: 10px; color: var(--text); font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer; margin-bottom: 10px; transition: 0.2s; text-align: left; }
+  .settings-menu-btn:hover { border-color: var(--accent); }
+  .settings-menu-btn.danger { color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
 
   .log-item {
     display: flex; justify-content: space-between; align-items: center;
@@ -324,13 +344,29 @@
     <nav class="tabs" id="tabs"></nav>
     <main id="main"></main>
   </div>
-  
-  <div class="io-section" id="io-section" style="display:none;">
-    <button class="btn-action" id="btn-export">Exportar Datos</button>
-    <button class="btn-action" id="btn-import" onclick="document.getElementById('file-import').click()">Importar Datos</button>
-    <input type="file" id="file-import" accept=".json" style="display: none;">
+</div>
+
+<!-- Modal Ajustes Generales -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal-content" style="max-width: 480px;">
+    <h2 class="modal-title">Opciones</h2>
+    <button class="settings-menu-btn" onclick="exportData()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> 
+      Exportar copia (.json)
+    </button>
+    <label class="settings-menu-btn" style="margin-bottom: 30px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> 
+      Importar copia 
+      <input type="file" id="file-import" accept=".json" style="display:none">
+    </label>
+    <button class="settings-menu-btn danger" onclick="resetAllData()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> 
+      Borrar todos los datos
+    </button>
+    <div class="modal-actions" style="margin-top:20px;">
+      <button class="btn-action" onclick="closeSettingsModal()">Cerrar</button>
+    </div>
   </div>
-  
 </div>
 
 <div class="modal-overlay" id="planner-modal">
@@ -353,7 +389,7 @@
     <h2 class="modal-title" id="history-title">Historial</h2>
     <div id="history-chart"></div>
     <div id="history-list" style="display:flex; flex-direction:column; gap:8px; margin-top:10px; max-height: 250px; overflow-y: auto;"></div>
-    <div class="modal-actions" style="margin-top: 15px;">
+    <div class="modal-actions">
       <button class="btn-action" onclick="closeHistory()">Cerrar</button>
     </div>
   </div>
@@ -374,7 +410,7 @@
   <div class="modal-content">
     <h2 class="modal-title" id="session-detail-title">Sesión</h2>
     <div id="session-detail-list" style="display:flex; flex-direction:column; gap:2px; max-height:340px; overflow-y:auto;"></div>
-    <div class="modal-actions" style="margin-top: 15px;">
+    <div class="modal-actions">
       <button class="btn-action" onclick="closeSessionDetail()">Cerrar</button>
     </div>
   </div>
@@ -419,6 +455,7 @@
 
 <script>
 const STORAGE_KEY = 'gymlog-data';
+const THEME_KEY = 'gymlog-theme';
 const DEFAULT_CATEGORIES = ['Pierna','Espalda','Pecho','Hombro','Brazo','Cardio'];
 
 let state = null;
@@ -454,7 +491,6 @@ function loadState(){
     if(!state.routine) state.routine = { 0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[] };
     if(!state.logs) state.logs = []; 
     
-    // Migraciones
     let hasCardio = false;
     state.categories.forEach(c => {
       if (c.name.toLowerCase() === 'core') { c.name = 'Cardio'; hasCardio = true; } 
@@ -482,6 +518,53 @@ function getLocalDateStr(date) {
   const d = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
   return d.toISOString().split('T')[0];
 }
+
+// ==== TEMA ====
+function updateThemeMetaColor(theme) { document.getElementById('meta-theme-color').setAttribute("content", theme === 'light' ? "#f4f6f8" : "#1b1d21"); }
+function initTheme() {
+  const savedTheme = localStorage.getItem(THEME_KEY);
+  const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  const isLight = savedTheme === 'light' || (!savedTheme && systemPrefersLight);
+  if (isLight) document.body.classList.add('light-theme');
+  updateThemeMetaColor(isLight ? 'light' : 'dark');
+}
+function toggleTheme() {
+  document.body.classList.toggle('light-theme');
+  const isLight = document.body.classList.contains('light-theme');
+  localStorage.setItem(THEME_KEY, isLight ? 'light' : 'dark');
+  updateThemeMetaColor(isLight ? 'light' : 'dark');
+  renderHomeHeader(document.getElementById('main-header')); // Refrescar cabecera para actualizar el ícono
+}
+
+// ==== AJUSTES Y EXPORTACIÓN ====
+function openSettingsModal() { document.getElementById('settings-modal').classList.add('active'); }
+function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
+
+function exportData() {
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+  const a = document.createElement('a'); a.href = dataStr; a.download = `gimnasio_${getLocalDateStr(new Date())}.json`; document.body.appendChild(a); a.click(); a.remove();
+  closeSettingsModal();
+  showAlert("Datos exportados correctamente.");
+}
+
+document.getElementById('file-import').addEventListener('change', function(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    try {
+      const imported = JSON.parse(evt.target.result);
+      if (imported && imported.categories) { 
+        state = imported; 
+        saveState(); 
+        render(); 
+        closeSettingsModal();
+        showAlert('Datos importados.'); 
+      }
+      else showAlert('Formato incorrecto.');
+    } catch (err) { showAlert('Error al leer el archivo.'); }
+  };
+  reader.readAsText(file); e.target.value = '';
+});
 
 // ==== CONFIRMACIÓN Y DESHACER ====
 let confirmCallback = null;
@@ -535,8 +618,9 @@ function goTo(view) {
 function resetAllData() {
   showConfirm("¿Estás seguro de que quieres BORRAR TODOS los datos (rutinas, ejercicios, historial)? Esta acción no se puede deshacer.", () => {
     localStorage.removeItem(STORAGE_KEY);
-    loadState(); // Recrea de fábrica
+    loadState();
     currentCalendarDate = new Date();
+    closeSettingsModal();
     goTo('home');
     showAlert("Todos los datos han sido borrados.");
   }, { title: "Reiniciar Aplicación", okLabel: "Borrar todo" });
@@ -548,26 +632,28 @@ function render() {
   const homeView = document.getElementById('home-view');
   const sessionsView = document.getElementById('sessions-view');
   const workspaceView = document.getElementById('workspace-view');
-  const ioSection = document.getElementById('io-section');
   const timerBar = document.getElementById('timer-bar');
 
   if (currentView === 'home') {
-    homeView.style.display = 'block'; sessionsView.style.display = 'none'; workspaceView.style.display = 'none'; ioSection.style.display = 'none'; timerBar.style.display = 'none';
+    homeView.style.display = 'block'; sessionsView.style.display = 'none'; workspaceView.style.display = 'none'; timerBar.style.display = 'none';
     renderHomeHeader(header); renderHomeContent(homeView);
   } else if (currentView === 'sessions') {
-    homeView.style.display = 'none'; sessionsView.style.display = 'block'; workspaceView.style.display = 'none'; ioSection.style.display = 'none'; timerBar.style.display = 'none';
+    homeView.style.display = 'none'; sessionsView.style.display = 'block'; workspaceView.style.display = 'none'; timerBar.style.display = 'none';
     renderSessionsHeader(header); renderSessionsContent(sessionsView);
   } else if (currentView === 'workout') {
-    homeView.style.display = 'none'; sessionsView.style.display = 'none'; workspaceView.style.display = 'flex'; ioSection.style.display = 'none'; timerBar.style.display = 'flex';
+    homeView.style.display = 'none'; sessionsView.style.display = 'none'; workspaceView.style.display = 'flex'; timerBar.style.display = 'flex';
     renderWorkoutHeader(header); renderTabs(); renderMain();
   } else if (currentView === 'edit') {
-    homeView.style.display = 'none'; sessionsView.style.display = 'none'; workspaceView.style.display = 'flex'; ioSection.style.display = 'flex'; timerBar.style.display = 'none';
+    homeView.style.display = 'none'; sessionsView.style.display = 'none'; workspaceView.style.display = 'flex'; timerBar.style.display = 'none';
     renderEditHeader(header); renderTabs(); renderMain();
   }
 }
 
 // --- Renders Cabeceras ---
 function renderHomeHeader(header) {
+  const isLight = document.body.classList.contains('light-theme');
+  const themeIconSVG = isLight ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>' : '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+
   header.innerHTML = `
     <div class="header-top">
       <div class="header-title">
@@ -578,9 +664,14 @@ function renderHomeHeader(header) {
         </svg>
         <div><h1>Registro</h1></div>
       </div>
-      <button class="btn-back" onclick="resetAllData()" title="Reiniciar todo" style="color:var(--text-muted); margin-left:auto;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-      </button>
+      <div class="header-actions">
+        <button class="btn-icon" title="Cambiar tema" onclick="toggleTheme()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${themeIconSVG}</svg>
+        </button>
+        <button class="btn-icon" title="Opciones" onclick="openSettingsModal()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+      </div>
     </div>
   `;
 }
@@ -669,13 +760,12 @@ function renderSessionsContent(container) {
   
   html += `</div>`;
   
-  // Lista detalle del mes debajo del calendario
   const monthStr = `${year}-${(month+1).toString().padStart(2,'0')}`;
   const monthLogs = state.logs.filter(l => l.date.startsWith(monthStr));
   const monthDates = [...new Set(monthLogs.map(l=>l.date))].sort((a,b)=>b.localeCompare(a));
   
   if (monthDates.length > 0) {
-     html += `<div class="session-list" id="session-list" style="padding: 0 18px 20px;">`;
+     html += `<div class="session-list" id="session-list">`;
      monthDates.forEach(date => {
         const dayLogs = state.logs.filter(l => l.date === date);
         const cats = [...new Set(dayLogs.map(l => l.catName || 'Sin grupo'))];
@@ -785,7 +875,7 @@ function renderHomeContent(container) {
       <div class="menu-btn" onclick="goTo('edit')">
         <div class="menu-btn-content">
           <span>📝 Planificar Ejercicios</span>
-          <span class="menu-btn-desc">Añade, organiza e importa datos.</span>
+          <span class="menu-btn-desc">Añade y organiza tus rutinas.</span>
         </div>
         <span class="menu-btn-icon">→</span>
       </div>
@@ -1276,24 +1366,7 @@ function resetTimer() {
   document.getElementById('timer-bar').classList.remove('timer-done', 'active');
 }
 
-// === IMPORTAR/EXPORTAR ===
-document.getElementById('btn-export').addEventListener('click', () => {
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
-  const a = document.createElement('a'); a.href = dataStr; a.download = `gimnasio_${getLocalDateStr(new Date())}.json`; document.body.appendChild(a); a.click(); a.remove();
-});
-document.getElementById('file-import').addEventListener('change', function(e) {
-  const file = e.target.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(evt) {
-    try {
-      const imported = JSON.parse(evt.target.result);
-      if (imported && imported.categories) { state = imported; saveState(); render(); showAlert('Datos importados.'); }
-      else showAlert('Formato incorrecto.');
-    } catch (err) { showAlert('Error al leer el archivo.'); }
-  };
-  reader.readAsText(file); e.target.value = '';
-});
-
+initTheme();
 loadState();
 if('serviceWorker' in navigator){ window.addEventListener('load', () => { navigator.serviceWorker.register('service-worker.js').catch(err => console.error(err)); }); }
 </script>
